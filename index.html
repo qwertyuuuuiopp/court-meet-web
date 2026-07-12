@@ -2016,6 +2016,7 @@
 
  // ========== DeepSeek API 集成 ==========
  const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+ const DEFAULT_API_KEY = 'sk-c339811a91004977af6de946306ce96a'; // 内置默认Key，用户可覆盖
  const SYSTEM_PROMPT = `你是"球场见"，一个友好智能的AI助手，同时也是篮球陪练专家。
 
 你的核心身份：
@@ -2033,11 +2034,37 @@
 你能回答任何领域的问题，但篮球是你的专长。用户问你时间、天气、学习、生活等问题时，正常友好地回答即可。`;
 
  function getApiKey() {
-     return localStorage.getItem('deepseek_api_key') || '';
+     // 优先使用用户自定义Key，其次使用内置默认Key
+     return localStorage.getItem('deepseek_api_key') || DEFAULT_API_KEY;
  }
 
  function hasApiKey() {
      return !!getApiKey();
+ }
+
+ function isUsingDefaultKey() {
+     return !localStorage.getItem('deepseek_api_key') && DEFAULT_API_KEY;
+ }
+
+ // 每日调用限制（防盗刷）
+ const DAILY_LIMIT = 50;
+ function getDailyUsage() {
+     const today = new Date().toDateString();
+     const data = JSON.parse(localStorage.getItem('ds_usage') || '{}');
+     if (data.date !== today) return 0;
+     return data.count || 0;
+ }
+ function incrementUsage() {
+     const today = new Date().toDateString();
+     const data = JSON.parse(localStorage.getItem('ds_usage') || '{}');
+     if (data.date !== today) {
+         localStorage.setItem('ds_usage', JSON.stringify({ date: today, count: 1 }));
+     } else {
+         localStorage.setItem('ds_usage', JSON.stringify({ date: today, count: (data.count || 0) + 1 }));
+     }
+ }
+ function getRemainingUsage() {
+     return Math.max(0, DAILY_LIMIT - getDailyUsage());
  }
 
  function toggleApiKeyPanel() {
@@ -2063,15 +2090,15 @@
      localStorage.setItem('deepseek_api_key', key);
      document.getElementById('apiKeyPanel').classList.remove('active');
      updateAiModeUI(true);
-     addMessage('✅ AI模式已启用！现在我是真正的AI陪练了，什么篮球问题都能聊 🏀\n\n试试问我任何问题吧！', 'bot');
+     addMessage('✅ 已切换到你的专属API Key！不限每日次数 🏀\n\n试试问我任何问题吧！', 'bot');
  }
 
  function clearApiKey() {
      localStorage.removeItem('deepseek_api_key');
      document.getElementById('apiKeyInput').value = '';
      document.getElementById('apiKeyPanel').classList.remove('active');
-     updateAiModeUI(false);
-     addMessage('已切换回关键词匹配模式。仍可回答常见篮球问题 🏀', 'bot');
+     updateAiModeUI(true); // 仍为AI模式，因为内置了默认Key
+     addMessage('已切换回默认AI模式（每日限50次）。如需无限对话，点击⚙️输入你自己的Key 🏀', 'bot');
  }
 
  function updateAiModeUI(enabled) {
@@ -2079,7 +2106,12 @@
      const status = document.getElementById('chatStatus');
      if (enabled) {
          badge.style.display = 'inline-block';
-         status.textContent = 'AI模式 · DeepSeek驱动';
+         if (isUsingDefaultKey()) {
+             const remaining = getRemainingUsage();
+             status.textContent = 'AI模式 · 今日剩余' + remaining + '次';
+         } else {
+             status.textContent = 'AI模式 · 专属Key';
+         }
          status.style.color = '#552583';
      } else {
          badge.style.display = 'none';
@@ -2091,6 +2123,12 @@
  async function callDeepSeek(userText) {
      const apiKey = getApiKey();
      if (!apiKey) return null;
+
+     // 检查每日调用限制
+     const remaining = getRemainingUsage();
+     if (remaining <= 0) {
+         return '⚠️ 今日AI对话次数已用完（每日限制' + DAILY_LIMIT + '次）。\n\n明天再来，或者点击⚙️输入你自己的API Key继续使用 🏀';
+     }
 
      // 构建对话历史（最近5轮）
      const messages = [
@@ -2123,7 +2161,7 @@
                  return '⚠️ API Key无效，请点击右上角⚙️重新设置。\n\n已自动切换回关键词匹配模式。';
              }
              if (response.status === 429) {
-                 return '⚠️ API调用太频繁了，请稍等几秒再试。\n\n或者点击⚙️清除Key使用关键词模式。';
+                 return '⚠️ API调用太频繁了，请稍等几秒再试。';
              }
              return null; // Fallback to keyword matching
          }
@@ -2135,6 +2173,9 @@
          chatContext.history.push({ role: 'user', content: userText });
          chatContext.history.push({ role: 'assistant', content: reply });
 
+         // 增加每日使用计数
+         incrementUsage();
+
          return reply;
      } catch (error) {
          console.error('DeepSeek API network error:', error);
@@ -2142,12 +2183,9 @@
      }
  }
 
- // 页面加载时检查API Key状态
+ // 页面加载时检查API Key状态（内置默认Key，始终为AI模式）
  (function initAiMode() {
-     if (hasApiKey()) {
-         // 延迟执行，确保DOM已加载
-         setTimeout(() => updateAiModeUI(true), 100);
-     }
+     setTimeout(() => updateAiModeUI(hasApiKey()), 100);
  })();
 
  const chatKnowledge = [
@@ -2921,15 +2959,15 @@ function applyTactic(tactic) {
     <!-- API Key配置面板 -->
     <div class="apikey-panel" id="apiKeyPanel">
         <div class="apikey-panel-title">🤖 DeepSeek AI 设置</div>
-        <p class="apikey-desc">输入你的DeepSeek API Key，解锁真正的AI对话体验。<br>没有Key也能用（关键词匹配模式）。</p>
+        <p class="apikey-desc">✅ 当前已内置AI引擎，直接对话即可！<br>每日限50次。输入你自己的Key可解除限制。</p>
         <input type="password" class="apikey-input" id="apiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxxxxxx" />
         <div class="apikey-actions">
-            <button class="apikey-save-btn" onclick="saveApiKey()">保存并启用AI</button>
-            <button class="apikey-clear-btn" onclick="clearApiKey()">清除Key</button>
+            <button class="apikey-save-btn" onclick="saveApiKey()">使用我的Key</button>
+            <button class="apikey-clear-btn" onclick="clearApiKey()">恢复默认</button>
         </div>
         <div class="apikey-tip">
-            获取Key：访问 <a href="https://platform.deepseek.com/" target="_blank" style="color:var(--gold);">platform.deepseek.com</a> → API Keys → 创建<br>
-            Key仅存储在本地浏览器，不会上传服务器
+            获取专属Key：访问 <a href="https://platform.deepseek.com/" target="_blank" style="color:var(--gold);">platform.deepseek.com</a> → API Keys → 创建<br>
+            专属Key不限次数，Key仅存储在本地浏览器
         </div>
     </div>
     <div class="chat-messages" id="chatMessages">
