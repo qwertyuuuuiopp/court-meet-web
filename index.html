@@ -2744,10 +2744,39 @@ const positionOptions = [
     { val: 'C', label: 'C · 中锋' }
 ];
 
+// ========== 篮球战术数据库（20+战术） ==========
+const tacticsDB = {
+    horns: { name: '牛角战术', emoji: '🏀', cat: '半场阵地', desc: '双内线落位罚球线两侧牛角位，PG弧顶持球，内线上提掩护后选择突破或分球', req: { bigs: 2, shooting: 2, ballHandler: true }, counter: { slowBigs: true, weakPerimeter: true }, steps: ['PG弧顶持球', '双内线牛角位落位', '内线上提掩护', 'PG突破或分球外弹内线'] },
+    pickroll: { name: '挡拆战术', emoji: '🏀', cat: '半场阵地', desc: '内线上提为持球人做掩护，持球人借掩护突破或投篮，掩护人顺下或外弹', req: { bigs: 1, ballHandler: true }, counter: { slowBigs: true, weakSwitch: true }, steps: ['内线上提做掩护', 'PG借掩护突破', '掩护人顺下或外弹', '根据防守选择终结'] },
+    triangle: { name: '三角进攻', emoji: '🔺', cat: '半场阵地', desc: '低位背身+底角+侧翼形成三角，通过背打、无球掩护和空切创造得分', req: { postScorer: true, passing: 2, height: 190 }, counter: { smallGuards: true, weakHelp: true }, steps: ['C低位背身形成三角', '侧翼和底角拉开空间', 'C单打或分球空切队友', '无球掩护创造投篮'] },
+    fastbreak: { name: '快攻战术', emoji: '⚡', cat: '转换进攻', desc: '防守转进攻时快速推进，PG中路+两侧边锋快下，形成多打少优势', req: { speed: 2, guards: 2 }, counter: { slowTeam: true, oldTeam: true }, steps: ['抢到篮板快速推进', 'PG中路+两侧边锋快下', '多打少分球上篮', '防守未落位前终结'] },
+    hornsflare: { name: '牛角横切', emoji: '🏀', cat: '半场阵地', desc: '牛角阵型变体，一名内线做flare screen为射手创造投篮空间', req: { bigs: 2, shooting: 2, passing: 1 }, counter: { weakPerimeter: true, slowBigs: true }, steps: ['双内线牛角位落位', '一侧内线给射手做flare screen', '另一侧内线准备接球', 'PG选择传射手或内线'] },
+    fivemotion: { name: '5-Out动态进攻', emoji: '🎯', cat: '半场阵地', desc: '5名球员全部在外线，通过传切、空切和挡拆创造机会，空间拉满', req: { shooting: 3, speed: 1, passing: 2 }, counter: { slowTeam: true, weakPerimeter: true }, steps: ['5人外线落位拉开空间', '传球+空切创造机会', '无球掩护创造投篮', '根据防守反应选择终结'] },
+    highlow: { name: '高低位战术', emoji: '🏀', cat: '半场阵地', desc: '一名内线在高位策应，另一名在低位准备接球，高低传切配合', req: { bigs: 2, passing: 1, height: 190 }, counter: { smallGuards: true, weakInterior: true }, steps: ['高位内线弧顶策应', '低位内线要位准备接球', '高位传低位形成错位', '低位单打或回传'] },
+    uclacut: { name: 'UCLA切入', emoji: '🏀', cat: '半场阵地', desc: '后卫传球给侧翼后，借助内线的背掩护空切篮下接球上篮', req: { bigs: 1, passing: 2, speed: 1 }, counter: { slowBigs: true, weakHelp: true }, steps: ['PG传球给侧翼SG', 'C背掩护挡住PG防守人', 'PG空切篮下接球', '接球上篮或分球'] },
+    elevator: { name: '电梯门战术', emoji: '🚪', cat: '半场阵地', desc: '两名内线并排站立，射手从中间穿过后两人合拢挡住追防者，创造三分空位', req: { shooting: 2, threepoint: 1, bigs: 2 }, counter: { weakPerimeter: true, slowBigs: true }, steps: ['双内线并排站立', '射手从中间穿过', '内线合拢挡住追防者', '射手接球三分出手'] },
+    spainpnr: { name: 'Spain挡拆', emoji: '🏀', cat: '半场阵地', desc: '挡拆后第三名球员跟进出back screen，为顺下的掩护人做二次掩护', req: { bigs: 1, passing: 2, ballHandler: true }, counter: { weakSwitch: true, weakHelp: true }, steps: ['高位挡拆发起', '第三球员跟进出back screen', '掩护人借二次掩护顺下', 'PG选择传球或自己攻'] },
+    backdoor: { name: '反跑战术', emoji: '🏃', cat: '半场阵地', desc: '防守过于贴身时，进攻球员突然反跑切入篮下接球上篮', req: { speed: 2, passing: 1 }, counter: { overplay: true, slowTeam: true }, steps: ['防守人过度贴身', '进攻球员突然反跑', '队友及时传球', '接球上篮终结'] },
+    dhohandoff: { name: '手递手传球', emoji: '🤝', cat: '半场阵地', desc: '内线手递手传球给后卫，后卫接球后突破或投篮，简洁高效', req: { bigs: 1, ballHandler: true, passing: 1 }, counter: { weakPerimeter: true, slowBigs: true }, steps: ['内线高位持球', '后卫跑向内线接手递手', '内线做隐蔽掩护', '后卫突破或投篮'] },
+    insideout: { name: '内外结合', emoji: '🏀', cat: '半场阵地', desc: '先打内线吸引包夹，再分球外线空位投篮，内外结合的经典打法', req: { postScorer: true, shooting: 2, passing: 1 }, counter: { weakInterior: true, smallGuards: true }, steps: ['内线低位要球单打', '吸引包夹后分球外线', '外线空位投篮', '未包夹则内线终结'] },
+    isolation: { name: '错位单打', emoji: '🎯', cat: '半场阵地', desc: '通过换防制造错位（大打小/小打大），让优势球员单打终结', req: { shooting: 1, strength: 1 }, counter: { weakSwitch: true, mismatch: true }, steps: ['通过挡拆制造错位', '识别大打小或小打大', '清空一侧让优势球员单打', '单打终结或吸引包夹分球'] },
+    dragpnr: { name: '拖拽挡拆', emoji: '🏀', cat: '转换进攻', desc: '快攻未形成多打少时，拖后跟进的内线立即做挡拆，趁防守未落位发动攻击', req: { bigs: 1, ballHandler: true, speed: 1 }, counter: { slowTeam: true, weakSwitch: true }, steps: ['快攻推进到前场', '防守未完全落位', '拖后内线立即做挡拆', 'PG借掩护快速终结'] },
+    screenaway: { name: '交叉掩护', emoji: '🏀', cat: '半场阵地', desc: '持球人一侧，另一侧两名球员做交叉掩护，创造投篮或空切机会', req: { shooting: 2, passing: 1 }, counter: { weakHelp: true, weakPerimeter: true }, steps: ['PG一侧持球', '弱侧两人交叉掩护', '掩护后外弹或内切', 'PG根据情况分球'] },
+    princeton: { name: '普林斯顿进攻', emoji: '🎓', cat: '半场阵地', desc: '所有球员不断传切跑位，强调空间和球权分享，通过反跑和后门切入得分', req: { passing: 3, shooting: 2, speed: 1 }, counter: { slowTeam: true, overplay: true }, steps: ['5人不断传切跑位', '保持空间和球权分享', '反跑和后门切入', '出现机会果断终结'] },
+    spreadpnr: { name: '空间挡拆', emoji: '🎯', cat: '半场阵地', desc: '4名射手拉开空间，仅内线和PG做挡拆，最大化挡拆空间和传球路线', req: { shooting: 3, threepoint: 2, ballHandler: true }, counter: { weakPerimeter: true, slowBigs: true }, steps: ['4射手拉开空间', 'PG和内线做挡拆', '防守收缩则分球三分', '防守不收则PG或内线终结'] },
+    floppy: { name: 'Floppy战术', emoji: '🏀', cat: '半场阵地', desc: '射手从底线两侧依次借双掩护跑出，接球投篮的经典射手战术', req: { shooting: 2, threepoint: 1, bigs: 2 }, counter: { weakPerimeter: true, slowBigs: true }, steps: ['射手站底线一侧', '双内线分别在罚球区两侧做掩护', '射手依次借双掩护跑出', '接球投篮或继续跑位'] },
+    hornsdown: { name: '牛角下切', emoji: '🏀', cat: '半场阵地', desc: '牛角阵型变体，内线不掩护而是突然下切篮下，接PG传球直接攻筐', req: { bigs: 2, passing: 1, speed: 1 }, counter: { weakHelp: true, slowBigs: true }, steps: ['双内线牛角位落位', '假装上提掩护实则下切', 'PG及时传球', '内线接球直接攻筐'] }
+};
+
 function openTacticsModal() {
     const overlay = document.getElementById('tacticsModalOverlay');
     const container = document.getElementById('playerInputs');
     container.innerHTML = '';
+
+    // 我方球员输入
+    const myTeamHeader = document.createElement('div');
+    myTeamHeader.innerHTML = '<div style="color:var(--gold);font-weight:700;font-size:15px;margin-bottom:12px;">🟡 我方阵容</div>';
+    container.appendChild(myTeamHeader);
 
     for (let i = 1; i <= 5; i++) {
         const row = document.createElement('div');
@@ -2774,13 +2803,48 @@ function openTacticsModal() {
         container.appendChild(row);
     }
 
-    // Pre-select some skills for demo
+    // 对手信息输入
+    const oppHeader = document.createElement('div');
+    oppHeader.style.marginTop = '20px';
+    oppHeader.innerHTML = `
+        <div style="color:#e74c3c;font-weight:700;font-size:15px;margin-bottom:12px;">🔴 对手特点</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div>
+                <div class="p-label">对手平均身高</div>
+                <select id="oppHeight" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text-primary);font-size:13px;">
+                    <option value="short">偏矮 (<180cm)</option>
+                    <option value="medium" selected>中等 (180-190cm)</option>
+                    <option value="tall">偏高 (>190cm)</option>
+                </select>
+            </div>
+            <div>
+                <div class="p-label">对手速度</div>
+                <select id="oppSpeed" style="width:100%;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:var(--text-primary);font-size:13px;">
+                    <option value="slow">偏慢</option>
+                    <option value="medium" selected>中等</option>
+                    <option value="fast">偏快</option>
+                </select>
+            </div>
+        </div>
+        <div class="p-label" style="margin-bottom:6px;">对手弱点（可多选）</div>
+        <div class="skill-tags-wrapper" id="oppWeakness">
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="slowBigs">内线移动慢</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="weakPerimeter">外线防守弱</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="weakInterior">内线防守弱</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="weakSwitch">换防不默契</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="weakHelp">协防意识差</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="overplay">防守过贴</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="slowTeam">整体速度慢</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="smallGuards">后卫偏矮</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="oldTeam">体能不足</span>
+            <span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-w="mismatch">有错位可利用</span>
+        </div>
+    `;
+    container.appendChild(oppHeader);
+
+    // Pre-select some skills
     const defaults = [
-        [0, 1, 2],   // PG: 投篮, 运球, 速度
-        [0, 7],      // SG: 投篮, 三分
-        [2, 5],      // SF: 速度, 传球
-        [3, 4, 6],   // PF: 力量, 篮板, 防守
-        [3, 4, 6]    // C: 力量, 篮板, 防守
+        [0, 1, 2], [0, 7], [2, 5], [3, 4, 6], [3, 4, 6]
     ];
     defaults.forEach((skills, idx) => {
         const wrapper = document.getElementById(`skills_${idx + 1}`);
@@ -2810,6 +2874,7 @@ function analyzeTactics() {
     btn.textContent = '🤔 AI正在分析阵容...';
 
     setTimeout(() => {
+        // 收集我方球员信息
         const players = [];
         for (let i = 1; i <= 5; i++) {
             const pos = document.getElementById(`pos_${i}`).value;
@@ -2819,102 +2884,240 @@ function analyzeTactics() {
             players.push({ pos, height: hgt, skills });
         }
 
+        // 收集对手信息
+        const oppHeight = document.getElementById('oppHeight').value;
+        const oppSpeed = document.getElementById('oppSpeed').value;
+        const oppWeakEls = document.querySelectorAll('#oppWeakness .skill-tag-mini.selected');
+        const oppWeaknesses = Array.from(oppWeakEls).map(e => e.dataset.w);
+
         // 分析阵容特征
         const avgHeight = players.reduce((s, p) => s + p.height, 0) / 5;
         const allSkills = players.flatMap(p => p.skills);
-        const hasShooting = allSkills.filter(s => s === '投篮' || s === '三分').length;
-        const hasSpeed = allSkills.filter(s => s === '速度').length;
-        const hasStrength = allSkills.filter(s => s === '力量').length;
-        const hasRebounding = allSkills.filter(s => s === '篮板').length;
-        const hasPassing = allSkills.filter(s => s === '传球').length;
-        const bigCount = players.filter(p => p.pos === 'PF' || p.pos === 'C').length;
-        const guardCount = players.filter(p => p.pos === 'PG' || p.pos === 'SG').length;
-        const tallest = Math.max(...players.map(p => p.height));
-        const shortest = Math.min(...players.map(p => p.height));
-
-        // 为每个战术评分
-        const scores = {
-            horns: 0,
-            pickroll: 0,
-            triangle: 0,
-            fastbreak: 0
+        const teamTraits = {
+            shooting: allSkills.filter(s => s === '投篮' || s === '三分').length,
+            threepoint: allSkills.filter(s => s === '三分').length,
+            speed: allSkills.filter(s => s === '速度').length,
+            strength: allSkills.filter(s => s === '力量').length,
+            rebounding: allSkills.filter(s => s === '篮板').length,
+            passing: allSkills.filter(s => s === '传球').length,
+            defense: allSkills.filter(s => s === '防守').length,
+            bigs: players.filter(p => p.pos === 'PF' || p.pos === 'C').length,
+            guards: players.filter(p => p.pos === 'PG' || p.pos === 'SG').length,
+            ballHandler: players.some(p => p.pos === 'PG' && (p.skills.includes('运球') || p.skills.includes('传球'))),
+            postScorer: players.some(p => (p.pos === 'C' || p.pos === 'PF') && (p.skills.includes('力量') || p.skills.includes('篮板'))),
+            maxHeight: Math.max(...players.map(p => p.height)),
+            avgHeight: Math.round(avgHeight)
         };
+
+        // 为每个战术评分（基于我方阵容匹配度 + 对手弱点克制度）
+        const scores = {};
         const reasons = {};
 
-        // 牛角战术: 需要双内线+投篮能力+好PG
-        scores.horns = 50;
-        if (bigCount >= 2) scores.horns += 25;
-        else if (bigCount === 1) scores.horns += 10;
-        if (hasShooting >= 2) scores.horns += 15;
-        if (players.some(p => p.pos === 'PG' && p.skills.includes('运球'))) scores.horns += 10;
-        reasons.horns = `你的阵容有${bigCount}名内线球员${bigCount >= 2 ? '，双内线落位牛角位完美匹配' : '，建议增加一名内线以发挥最大效果'}。${hasShooting >= 2 ? '全队投篮能力突出，外弹投篮威胁大。' : '投篮能力需加强，可侧重内线配合。'}${avgHeight > 185 ? '平均身高' + Math.round(avgHeight) + 'cm，内线优势明显。' : ''}`;
+        for (const [key, tactic] of Object.entries(tacticsDB)) {
+            let teamScore = 30; // 基础分降低，让差异更明显
+            let counterScore = 0;
+            const req = tactic.req;
+            const missing = [];
 
-        // 挡拆战术: 需要后卫+内线组合，普适性强
-        scores.pickroll = 60;
-        if (guardCount >= 1 && bigCount >= 1) scores.pickroll += 25;
-        if (hasPassing >= 1) scores.pickroll += 10;
-        if (players.some(p => p.pos === 'PG' && (p.skills.includes('运球') || p.skills.includes('速度')))) scores.pickroll += 5;
-        reasons.pickroll = `后卫+内线的经典组合${guardCount >= 1 && bigCount >= 1 ? '，挡拆战术天然适配你的阵容' : '，建议调整阵容结构'}。${hasPassing >= 1 ? '有传球能力强的球员，挡拆后分球质量高。' : ''}挡拆是篮球最基础战术，学习成本低，执行成功率高。`;
+            // 评分：阵容匹配度
+            if (req.bigs && teamTraits.bigs >= req.bigs) teamScore += 20;
+            else if (req.bigs) { teamScore -= 10; missing.push('内线不足'); }
 
-        // 三角进攻: 需要强力低位球员+传球意识
-        scores.triangle = 40;
-        if (players.some(p => (p.pos === 'C' || p.pos === 'PF') && p.skills.includes('力量'))) scores.triangle += 25;
-        if (hasPassing >= 2) scores.triangle += 20;
-        if (tallest >= 190) scores.triangle += 10;
-        if (hasRebounding >= 2) scores.triangle += 5;
-        reasons.triangle = `${tallest >= 190 ? '最高球员' + tallest + 'cm，' : ''}${players.some(p => (p.pos === 'C' || p.pos === 'PF') && p.skills.includes('力量')) ? '有力量型内线可在低位背打。' : '缺少力量型内线，低位威胁不足。'}${hasPassing >= 2 ? '全队传球意识好，三角传切配合流畅。' : '传球能力需提升，否则三角进攻容易停滞。'}三角进攻上限高但学习成本也高，适合有一定默契的队伍。`;
+            if (req.shooting && teamTraits.shooting >= req.shooting) teamScore += 15;
+            else if (req.shooting) { teamScore -= 5; missing.push('投篮能力不足'); }
 
-        // 快攻战术: 需要速度+后卫
-        scores.fastbreak = 45;
-        if (hasSpeed >= 2) scores.fastbreak += 25;
-        else if (hasSpeed === 1) scores.fastbreak += 10;
-        if (guardCount >= 2) scores.fastbreak += 15;
-        if (avgHeight < 185) scores.fastbreak += 10;
-        if (players.some(p => p.skills.includes('传球'))) scores.fastbreak += 5;
-        reasons.fastbreak = `${hasSpeed >= 2 ? '全队有' + hasSpeed + '名速度型球员，快攻推进能力强。' : '速度型球员不足，快攻效果受限。'}${avgHeight < 185 ? '阵容偏灵活，适合跑轰打法。' : '阵容偏高大，落阵地更稳妥。'}${guardCount >= 2 ? '后卫线人员充足，可形成多线快攻。' : ''}`;
+            if (req.threepoint && teamTraits.threepoint >= req.threepoint) teamScore += 10;
+            else if (req.threepoint) teamScore -= 5;
 
-        // 找到最佳战术
-        const bestTactic = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-        const tacticNames = {
-            horns: '牛角战术 (Horns)',
-            pickroll: '挡拆战术 (Pick & Roll)',
-            triangle: '三角进攻 (Triangle)',
-            fastbreak: '快攻战术 (Fast Break)'
-        };
-        const tacticEmojis = { horns: '🏀', pickroll: '🏀', triangle: '🔺', fastbreak: '⚡' };
+            if (req.speed && teamTraits.speed >= req.speed) teamScore += 15;
+            else if (req.speed) { teamScore -= 8; missing.push('速度不够'); }
 
-        // 渲染结果
-        const result = document.getElementById('tacticsResult');
-        result.innerHTML = `
-            <div class="result-badge">✨ 最佳匹配 ${Math.round(scores[bestTactic])}%</div>
-            <h4>${tacticEmojis[bestTactic]} 推荐战术：${tacticNames[bestTactic]}</h4>
-            <p class="result-reason">${reasons[bestTactic]}</p>
-            <div class="result-score">
-                ${Object.keys(scores).map(t => `
-                    <div class="score-item">
-                        <div class="score-label">${tacticNames[t]}</div>
-                        <div class="score-bar"><div class="score-fill" style="width: ${Math.min(scores[t], 100)}%"></div></div>
-                        <div class="score-val">${Math.round(scores[t])}%</div>
-                    </div>
-                `).join('')}
-            </div>
-            <div class="result-action">
-                <button class="result-action-btn primary" onclick="applyTactic('${bestTactic}')">查看战术演示</button>
-                <button class="result-action-btn" onclick="closeTacticsModal()">关闭</button>
+            if (req.passing && teamTraits.passing >= req.passing) teamScore += 12;
+            else if (req.passing) teamScore -= 5;
+
+            if (req.strength && teamTraits.strength >= req.strength) teamScore += 10;
+
+            if (req.height && teamTraits.maxHeight >= req.height) teamScore += 10;
+            else if (req.height) teamScore -= 8;
+
+            if (req.ballHandler && teamTraits.ballHandler) teamScore += 10;
+            else if (req.ballHandler) teamScore -= 15;
+
+            if (req.postScorer && teamTraits.postScorer) teamScore += 15;
+            else if (req.postScorer) teamScore -= 10;
+
+            if (req.guards && teamTraits.guards >= req.guards) teamScore += 10;
+
+            // 评分：对手弱点克制
+            const counterKeys = tactic.counter || {};
+            for (const [ckey, cval] of Object.entries(counterKeys)) {
+                if (cval && oppWeaknesses.includes(ckey)) {
+                    counterScore += 25;
+                }
+            }
+
+            // 对手特征影响
+            if (oppHeight === 'tall' && tactic.cat === '半场阵地' && teamTraits.shooting >= 2) {
+                counterScore += 5; // 对手高，我们打外线
+            }
+            if (oppHeight === 'short' && teamTraits.bigs >= 2) {
+                counterScore += 10; // 对手矮，我们打内线
+            }
+            if (oppSpeed === 'slow' && tactic.cat === '转换进攻') {
+                counterScore += 15; // 对手慢，打快攻
+            }
+            if (oppSpeed === 'fast' && tactic.cat === '半场阵地') {
+                counterScore += 5; // 对手快，降速打阵地
+            }
+
+            const totalScore = Math.max(5, Math.min(98, teamScore + counterScore));
+            scores[key] = totalScore;
+
+            // 生成理由
+            let reason = '';
+            if (counterScore >= 25) {
+                reason += `🎯 克制对手弱点：${oppWeaknesses.filter(w => counterKeys[w]).map(w => ({slowBigs:'内线移动慢',weakPerimeter:'外线防守弱',weakInterior:'内线防守弱',weakSwitch:'换防不默契',weakHelp:'协防意识差',overplay:'防守过贴',slowTeam:'整体速度慢',smallGuards:'后卫偏矮',oldTeam:'体能不足',mismatch:'有错位可利用'}[w])).join('、')}。`;
+            }
+            if (missing.length > 0) {
+                reason += `⚠️ 阵容短板：${missing.join('、')}。`;
+            }
+            if (counterScore === 0 && missing.length === 0) {
+                reason += `阵容匹配度较高，可以执行。`;
+            }
+            reasons[key] = reason || '阵容基本适配此战术。';
+        }
+
+        // 排序取前3
+        const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+        const top3 = sorted.slice(0, 3);
+
+        // 如果有DeepSeek API，用AI生成更深入的分析
+        if (hasApiKey() && getRemainingUsage() > 0) {
+            btn.textContent = '🤖 DeepSeek深度分析中...';
+            generateAITacticalAnalysis(players, teamTraits, oppHeight, oppSpeed, oppWeaknesses, top3, scores, reasons);
+        } else {
+            renderTacticsResult(top3, scores, reasons, null);
+            btn.disabled = false;
+            btn.textContent = '🔍 重新分析';
+        }
+    }, 800);
+}
+
+async function generateAITacticalAnalysis(players, teamTraits, oppHeight, oppSpeed, oppWeaknesses, top3, scores, reasons) {
+    const teamDesc = `我方阵容：${players.map((p,i) => `${i+1}号(${p.pos},${p.height}cm,特长:${p.skills.join('/')||'无'})`).join('；')}。平均身高${teamTraits.avgHeight}cm，${teamTraits.bigs}名内线，${teamTraits.guards}名后卫。投篮${teamTraits.shooting}人，速度${teamTraits.speed}人，传球${teamTraits.passing}人。`;
+    const oppDesc = `对手特点：平均身高${oppHeight}，速度${oppSpeed}，弱点：${oppWeaknesses.length ? oppWeaknesses.map(w => ({slowBigs:'内线移动慢',weakPerimeter:'外线防守弱',weakInterior:'内线防守弱',weakSwitch:'换防不默契',weakHelp:'协防意识差',overplay:'防守过贴',slowTeam:'整体速度慢',smallGuards:'后卫偏矮',oldTeam:'体能不足',mismatch:'有错位可利用'}[w])).join('、') : '暂无明显弱点'}。`;
+    const top3Desc = top3.map(([k, v], i) => `第${i+1}推荐：${tacticsDB[k].name}(${Math.round(v)}分)。理由：${reasons[k]}`).join('\n');
+
+    const prompt = `作为篮球战术分析师，根据以下信息给出个性化战术建议：
+
+${teamDesc}
+${oppDesc}
+
+算法初筛排名前三的战术：
+${top3Desc}
+
+请基于以上信息，用100-150字给出你的专业见解：
+1. 确认或调整推荐排序
+2. 说明为什么这套阵容适合/不适合打这些战术
+3. 针对对手弱点给出一个具体的执行建议
+4. 语气像教练在场边指导，简洁有力`;
+
+    const apiKey = getApiKey();
+    try {
+        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+            body: JSON.stringify({
+                model: 'deepseek-chat',
+                messages: [
+                    { role: 'system', content: '你是专业篮球战术分析师，擅长根据阵容特征和对手弱点给出战术建议。回答简洁专业，像教练指导。' },
+                    { role: 'user', content: prompt }
+                ],
+                max_tokens: 300,
+                temperature: 0.5
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const aiAnalysis = data.choices[0].message.content;
+            incrementUsage();
+            renderTacticsResult(top3, scores, reasons, aiAnalysis);
+        } else {
+            renderTacticsResult(top3, scores, reasons, null);
+        }
+    } catch (e) {
+        renderTacticsResult(top3, scores, reasons, null);
+    }
+
+    const btn = document.getElementById('analyzeBtn');
+    btn.disabled = false;
+    btn.textContent = '🔍 重新分析';
+}
+
+function renderTacticsResult(top3, scores, reasons, aiAnalysis) {
+    const result = document.getElementById('tacticsResult');
+    const [bestKey, bestScore] = top3[0];
+    const best = tacticsDB[bestKey];
+
+    let html = `
+        <div class="result-badge">✨ 最佳匹配 ${Math.round(bestScore)}%</div>
+        <h4>${best.emoji} 推荐战术：${best.name}</h4>
+        <p class="result-reason">${best.desc}</p>
+        <p class="result-reason" style="color:var(--gold);font-size:13px;">${reasons[bestKey]}</p>
+    `;
+
+    if (aiAnalysis) {
+        html += `
+            <div style="margin:16px 0;padding:16px;border-radius:12px;background:rgba(85,37,131,0.15);border:1px solid rgba(85,37,131,0.3);">
+                <div style="color:#7B3FA0;font-weight:700;font-size:13px;margin-bottom:8px;">🤖 DeepSeek AI深度分析</div>
+                <div style="font-size:13px;line-height:1.7;color:var(--text-primary);">${aiAnalysis}</div>
             </div>
         `;
-        result.classList.add('active');
+    }
 
-        btn.disabled = false;
-        btn.textContent = '🔍 重新分析';
-    }, 1200);
+    // Top 3 评分
+    html += '<div class="result-score">';
+    top3.forEach(([k, v]) => {
+        html += `
+            <div class="score-item">
+                <div class="score-label">${tacticsDB[k].name}</div>
+                <div class="score-bar"><div class="score-fill" style="width: ${Math.min(v, 100)}%"></div></div>
+                <div class="score-val">${Math.round(v)}%</div>
+            </div>
+        `;
+    });
+    html += '</div>';
+
+    // 其他推荐
+    if (top3[1]) {
+        const second = tacticsDB[top3[1][0]];
+        html += `<p style="font-size:12px;color:var(--text-secondary);margin-top:12px;">💡 备选：${second.name}(${Math.round(top3[1][1])}%) — ${reasons[top3[1][0]]}</p>`;
+    }
+    if (top3[2]) {
+        const third = tacticsDB[top3[2][0]];
+        html += `<p style="font-size:12px;color:var(--text-secondary);">💡 备选：${third.name}(${Math.round(top3[2][1])}%) — ${reasons[top3[2][0]]}</p>`;
+    }
+
+    // 战术步骤
+    html += `
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
+            <div style="font-size:13px;font-weight:700;margin-bottom:8px;">📋 执行步骤：</div>
+            ${best.steps.map((s, i) => `<div style="display:flex;align-items:center;font-size:12px;color:var(--text-secondary);margin-bottom:6px;"><span style="width:20px;height:20px;background:var(--gold);color:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-right:8px;flex-shrink:0;">${i+1}</span>${s}</div>`).join('')}
+        </div>
+        <div class="result-action">
+            <button class="result-action-btn primary" onclick="applyTactic('${bestKey}')">查看战术演示</button>
+            <button class="result-action-btn" onclick="closeTacticsModal()">关闭</button>
+        </div>
+    `;
+
+    result.innerHTML = html;
+    result.classList.add('active');
 }
 
 function applyTactic(tactic) {
     closeTacticsModal();
-    // 滚动到战术板
     document.getElementById('tactics').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    // 切换到对应战术
     setTimeout(() => {
         const tab = document.querySelector(`.tactics-tab-d[onclick*="${tactic}"]`);
         if (tab) switchTacticDesktop(tactic, tab);
