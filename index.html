@@ -1527,6 +1527,97 @@
             30% { transform: translateY(-8px); opacity: 1; }
         }
 
+        /* AI模式徽章 */
+        .ai-mode-badge {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--purple), var(--gold));
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        .chat-settings-btn {
+            font-size: 18px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+            margin-left: auto;
+            margin-right: 4px;
+        }
+        .chat-settings-btn:hover { background: rgba(255,255,255,0.1); transform: rotate(45deg); }
+        /* API Key面板 */
+        .apikey-panel {
+            display: none;
+            padding: 20px 24px;
+            background: rgba(85, 37, 131, 0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .apikey-panel.active { display: block; animation: msgIn 0.3s ease-out; }
+        .apikey-panel-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .apikey-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .apikey-input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: monospace;
+        }
+        .apikey-input:focus { border-color: var(--gold); }
+        .apikey-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .apikey-save-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(135deg, var(--gold), #e6a200);
+            color: var(--dark);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .apikey-clear-btn {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .apikey-tip {
+            margin-top: 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
         /* 页脚 */
         .footer {
             padding: 60px;
@@ -1920,7 +2011,139 @@
 
 <script>
  // ========== AI陪练增强系统 ==========
- let chatContext = { lastTopic: null, msgCount: 0, userName: null };
+ let chatContext = { lastTopic: null, msgCount: 0, userName: null, history: [] };
+
+ // ========== DeepSeek API 集成 ==========
+ const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
+ const SYSTEM_PROMPT = `你是"球场见"，一个专业的AI篮球陪练助手。你的用户是篮球零基础的萌新（小学到30岁），他们可能不敢上场、不懂规则、不会基本功。
+
+你的回答风格：
+1. 热情鼓励，像朋友一样聊天，绝不说教
+2. 用emoji和换行让回答易读（🏀🎯✅❌💡📌等）
+3. 技术要点要具体到"照做就行"的程度（比如"五指张开，掌心空出"而不是"注意手型"）
+4. 回答控制在200字以内，简洁有力
+5. 如果用户表达紧张/不敢上场，先共情再给建议
+6. 可以适当追问，引导用户继续对话
+
+你是篮球萌新的第一个朋友，陪伴他们迈出第一步。`;
+
+ function getApiKey() {
+     return localStorage.getItem('deepseek_api_key') || '';
+ }
+
+ function hasApiKey() {
+     return !!getApiKey();
+ }
+
+ function toggleApiKeyPanel() {
+     const panel = document.getElementById('apiKeyPanel');
+     panel.classList.toggle('active');
+     if (panel.classList.contains('active')) {
+         const input = document.getElementById('apiKeyInput');
+         input.value = getApiKey();
+         input.focus();
+     }
+ }
+
+ function saveApiKey() {
+     const key = document.getElementById('apiKeyInput').value.trim();
+     if (!key) {
+         alert('请输入有效的API Key');
+         return;
+     }
+     if (!key.startsWith('sk-')) {
+         alert('DeepSeek API Key通常以 sk- 开头，请检查');
+         return;
+     }
+     localStorage.setItem('deepseek_api_key', key);
+     document.getElementById('apiKeyPanel').classList.remove('active');
+     updateAiModeUI(true);
+     addMessage('✅ AI模式已启用！现在我是真正的AI陪练了，什么篮球问题都能聊 🏀\n\n试试问我任何问题吧！', 'bot');
+ }
+
+ function clearApiKey() {
+     localStorage.removeItem('deepseek_api_key');
+     document.getElementById('apiKeyInput').value = '';
+     document.getElementById('apiKeyPanel').classList.remove('active');
+     updateAiModeUI(false);
+     addMessage('已切换回关键词匹配模式。仍可回答常见篮球问题 🏀', 'bot');
+ }
+
+ function updateAiModeUI(enabled) {
+     const badge = document.getElementById('aiModeBadge');
+     const status = document.getElementById('chatStatus');
+     if (enabled) {
+         badge.style.display = 'inline-block';
+         status.textContent = 'AI模式 · DeepSeek驱动';
+         status.style.color = '#552583';
+     } else {
+         badge.style.display = 'none';
+         status.textContent = '在线 · 陪你迈出第一步';
+         status.style.color = 'var(--gold)';
+     }
+ }
+
+ async function callDeepSeek(userText) {
+     const apiKey = getApiKey();
+     if (!apiKey) return null;
+
+     // 构建对话历史（最近5轮）
+     const messages = [
+         { role: 'system', content: SYSTEM_PROMPT }
+     ];
+     const recentHistory = chatContext.history.slice(-10);
+     recentHistory.forEach(h => messages.push(h));
+     messages.push({ role: 'user', content: userText });
+
+     try {
+         const response = await fetch(DEEPSEEK_API_URL, {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json',
+                 'Authorization': `Bearer ${apiKey}`
+             },
+             body: JSON.stringify({
+                 model: 'deepseek-chat',
+                 messages: messages,
+                 max_tokens: 500,
+                 temperature: 0.7,
+                 stream: false
+             })
+         });
+
+         if (!response.ok) {
+             const errorData = await response.json().catch(() => ({}));
+             console.error('DeepSeek API error:', response.status, errorData);
+             if (response.status === 401) {
+                 return '⚠️ API Key无效，请点击右上角⚙️重新设置。\n\n已自动切换回关键词匹配模式。';
+             }
+             if (response.status === 429) {
+                 return '⚠️ API调用太频繁了，请稍等几秒再试。\n\n或者点击⚙️清除Key使用关键词模式。';
+             }
+             return null; // Fallback to keyword matching
+         }
+
+         const data = await response.json();
+         const reply = data.choices[0].message.content;
+
+         // 保存对话历史
+         chatContext.history.push({ role: 'user', content: userText });
+         chatContext.history.push({ role: 'assistant', content: reply });
+
+         return reply;
+     } catch (error) {
+         console.error('DeepSeek API network error:', error);
+         return null; // Fallback to keyword matching
+     }
+ }
+
+ // 页面加载时检查API Key状态
+ (function initAiMode() {
+     if (hasApiKey()) {
+         // 延迟执行，确保DOM已加载
+         setTimeout(() => updateAiModeUI(true), 100);
+     }
+ })();
 
  const chatKnowledge = [
     { keywords: ['运球', '控球', '拍球', 'dribble'], topic: 'dribble',
@@ -2044,34 +2267,50 @@ function sendQuickReply(text) {
     document.querySelector('.chat-quick-replies').style.display = 'none';
 
     showTypingIndicator();
-    setTimeout(() => {
-        hideTypingIndicator();
-        const match = smartMatch(text);
-        let response;
-        if (match) {
-            response = match.response;
-            chatContext.lastTopic = match.topic;
-        } else {
-            response = '这个问题很棒！让我想想...\n\n目前我擅长回答：运球、投篮、上篮、规则、装备、训练、战术、防守、体能、心态等问题。\n\n试试问我"怎么开始学篮球"？ 🏀';
-        }
 
-        // Add follow-up suggestions
-        if (match && match.followups) {
-            response += '\n\n💡 你还可以问：' + match.followups.map(f => '"' + f + '"').join(' / ');
-        }
+    if (hasApiKey()) {
+        // DeepSeek AI模式
+        callDeepSeek(text).then(reply => {
+            hideTypingIndicator();
+            if (reply) {
+                addMessage(reply, 'bot');
+            } else {
+                // API失败，回退到关键词匹配
+                fallbackToKeyword(text);
+            }
+        });
+    } else {
+        // 关键词匹配模式
+        setTimeout(() => {
+            hideTypingIndicator();
+            fallbackToKeyword(text);
+        }, 800 + Math.random() * 400);
+    }
+}
 
-        // Add encouragement every 3 messages
-        if (chatContext.msgCount > 0 && chatContext.msgCount % 3 === 0) {
-            response += '\n\n— ' + encouragements[chatContext.msgCount % encouragements.length];
-        }
+function fallbackToKeyword(text) {
+    const match = smartMatch(text);
+    let response;
+    if (match) {
+        response = match.response;
+        chatContext.lastTopic = match.topic;
+    } else {
+        response = '这个问题很棒！让我想想...\n\n目前我擅长回答：运球、投篮、上篮、规则、装备、训练、战术、防守、体能、心态等问题。\n\n💡 想要更智能的对话？点击右上角⚙️设置DeepSeek API Key，解锁真正的AI对话！\n\n试试问我"怎么开始学篮球"？ 🏀';
+    }
 
-        addMessage(response, 'bot');
+    if (match && match.followups) {
+        response += '\n\n💡 你还可以问：' + match.followups.map(f => '"' + f + '"').join(' / ');
+    }
 
-        // Show contextual quick replies
-        if (match && match.followups) {
-            showFollowUpReplies(match.followups);
-        }
-    }, 800 + Math.random() * 400);
+    if (chatContext.msgCount > 0 && chatContext.msgCount % 3 === 0) {
+        response += '\n\n— ' + encouragements[chatContext.msgCount % encouragements.length];
+    }
+
+    addMessage(response, 'bot');
+
+    if (match && match.followups) {
+        showFollowUpReplies(match.followups);
+    }
 }
 
 function showFollowUpReplies(followups) {
@@ -2090,51 +2329,73 @@ function sendUserMessage() {
     chatContext.msgCount++;
 
     showTypingIndicator();
-    setTimeout(() => {
-        hideTypingIndicator();
 
-        const match = smartMatch(text);
-        let response;
-
-        if (match) {
-            response = match.response;
-            chatContext.lastTopic = match.topic;
-        } else {
-            // Context-aware fallback
-            if (chatContext.lastTopic) {
-                response = `你刚才问了关于${chatContext.lastTopic === 'greeting' ? '打招呼' : chatContext.lastTopic}的问题，我理解你可能想深入了解。\n\n不过这个问题我还没完全学会 😅\n\n你可以试试问我：\n• 怎么运球/投篮/上篮\n• 篮球规则\n• 训练计划\n• 装备选择\n• 怎么克服紧张\n\n或者直接点下面的快捷问题！`;
+    if (hasApiKey()) {
+        // DeepSeek AI模式
+        callDeepSeek(text).then(reply => {
+            hideTypingIndicator();
+            if (reply) {
+                addMessage(reply, 'bot');
+                // AI模式下也显示快捷回复
+                const container = document.getElementById('chatQuickReplies');
+                container.innerHTML = `
+                    <button class="chat-quick-btn" onclick="sendQuickReply('新手怎么开始')">新手怎么开始？</button>
+                    <button class="chat-quick-btn" onclick="sendQuickReply('投篮不进')">投篮不进</button>
+                    <button class="chat-quick-btn" onclick="sendQuickReply('不敢上场')">不敢上场</button>
+                    <button class="chat-quick-btn" onclick="sendQuickReply('帮我制定训练计划')">训练计划</button>
+                `;
+                container.style.display = 'flex';
             } else {
-                response = `你好${getGreeting()}！我是球场见 🏀\n\n这个问题我还在学习中，但我擅长以下话题：\n\n🏀 运球技巧  🎯 投篮姿势  🏃 上篮练习\n📋 篮球规则  👟 装备选择  📅 训练计划\n🧠 心态调整  🛡️ 防守技巧  ⚡ 体能训练\n\n随便挑一个问我吧！`;
+                // API失败，回退到关键词匹配
+                fallbackToKeywordManual(text);
             }
-        }
+        });
+    } else {
+        // 关键词匹配模式
+        setTimeout(() => {
+            hideTypingIndicator();
+            fallbackToKeywordManual(text);
+        }, 800 + Math.random() * 500);
+    }
+}
 
-        // Add follow-up suggestions
-        if (match && match.followups) {
-            response += '\n\n💡 你还可以问：' + match.followups.map(f => '"' + f + '"').join(' / ');
-        }
+function fallbackToKeywordManual(text) {
+    const match = smartMatch(text);
+    let response;
 
-        // Add encouragement every 3 messages
-        if (chatContext.msgCount > 0 && chatContext.msgCount % 3 === 0) {
-            response += '\n\n— ' + encouragements[chatContext.msgCount % encouragements.length];
-        }
-
-        addMessage(response, 'bot');
-
-        // Show contextual quick replies
-        if (match && match.followups) {
-            showFollowUpReplies(match.followups);
+    if (match) {
+        response = match.response;
+        chatContext.lastTopic = match.topic;
+    } else {
+        if (chatContext.lastTopic) {
+            response = `你刚才问了关于${chatContext.lastTopic === 'greeting' ? '打招呼' : chatContext.lastTopic}的问题，我理解你可能想深入了解。\n\n不过这个问题我还没完全学会 😅\n\n💡 想要更智能的对话？点击右上角⚙️设置DeepSeek API Key，解锁真正的AI对话！\n\n你可以试试问我：\n• 怎么运球/投篮/上篮\n• 篮球规则\n• 训练计划\n• 装备选择\n• 怎么克服紧张`;
         } else {
-            // Show default quick replies
-            const container = document.getElementById('chatQuickReplies');
-            container.innerHTML = `
-                <button class="chat-quick-btn" onclick="sendQuickReply('新手怎么开始')">新手怎么开始？</button>
-                <button class="chat-quick-btn" onclick="sendQuickReply('投篮不进')">投篮不进怎么办？</button>
-                <button class="chat-quick-btn" onclick="sendQuickReply('三步上篮怎么练')">三步上篮</button>
-                <button class="chat-quick-btn" onclick="sendQuickReply('怎么克服紧张')">不敢上场</button>
-            `;
-            container.style.display = 'flex';
+            response = `你好${getGreeting()}！我是球场见 🏀\n\n这个问题我还在学习中，但我擅长以下话题：\n\n🏀 运球技巧  🎯 投篮姿势  🏃 上篮练习\n📋 篮球规则  👟 装备选择  📅 训练计划\n🧠 心态调整  🛡️ 防守技巧  ⚡ 体能训练\n\n💡 想要更智能的对话？点击右上角⚙️设置DeepSeek API Key！\n\n随便挑一个问我吧！`;
         }
-    }, 800 + Math.random() * 500);
+    }
+
+    if (match && match.followups) {
+        response += '\n\n💡 你还可以问：' + match.followups.map(f => '"' + f + '"').join(' / ');
+    }
+
+    if (chatContext.msgCount > 0 && chatContext.msgCount % 3 === 0) {
+        response += '\n\n— ' + encouragements[chatContext.msgCount % encouragements.length];
+    }
+
+    addMessage(response, 'bot');
+
+    if (match && match.followups) {
+        showFollowUpReplies(match.followups);
+    } else {
+        const container = document.getElementById('chatQuickReplies');
+        container.innerHTML = `
+            <button class="chat-quick-btn" onclick="sendQuickReply('新手怎么开始')">新手怎么开始？</button>
+            <button class="chat-quick-btn" onclick="sendQuickReply('投篮不进')">投篮不进怎么办？</button>
+            <button class="chat-quick-btn" onclick="sendQuickReply('三步上篮怎么练')">三步上篮</button>
+            <button class="chat-quick-btn" onclick="sendQuickReply('怎么克服紧张')">不敢上场</button>
+        `;
+        container.style.display = 'flex';
+    }
 }
 
 function addMessage(text, type) {
@@ -2646,10 +2907,25 @@ function applyTactic(tactic) {
     <div class="chat-header">
         <div class="chat-avatar">🏀</div>
         <div class="chat-header-info">
-            <div class="name">球场见</div>
-            <div class="status">在线 · 陪你迈出第一步</div>
+            <div class="name">球场见 <span class="ai-mode-badge" id="aiModeBadge" style="display:none;">AI</span></div>
+            <div class="status" id="chatStatus">在线 · 陪你迈出第一步</div>
         </div>
+        <div class="chat-settings-btn" onclick="toggleApiKeyPanel()" title="AI设置">⚙️</div>
         <div class="chat-close" onclick="closeChat()">✕</div>
+    </div>
+    <!-- API Key配置面板 -->
+    <div class="apikey-panel" id="apiKeyPanel">
+        <div class="apikey-panel-title">🤖 DeepSeek AI 设置</div>
+        <p class="apikey-desc">输入你的DeepSeek API Key，解锁真正的AI对话体验。<br>没有Key也能用（关键词匹配模式）。</p>
+        <input type="password" class="apikey-input" id="apiKeyInput" placeholder="sk-xxxxxxxxxxxxxxxxxxxx" />
+        <div class="apikey-actions">
+            <button class="apikey-save-btn" onclick="saveApiKey()">保存并启用AI</button>
+            <button class="apikey-clear-btn" onclick="clearApiKey()">清除Key</button>
+        </div>
+        <div class="apikey-tip">
+            获取Key：访问 <a href="https://platform.deepseek.com/" target="_blank" style="color:var(--gold);">platform.deepseek.com</a> → API Keys → 创建<br>
+            Key仅存储在本地浏览器，不会上传服务器
+        </div>
     </div>
     <div class="chat-messages" id="chatMessages">
         <div class="chat-msg bot">嗨！我是球场见 🏀 你的AI篮球陪练\n\n今天想练点什么？不用怕，谁都是从第一次运球开始的。\n\n我可以帮你：\n• 制定训练计划\n• 纠正投篮/运球动作\n• 讲解篮球规则\n• 克服上场紧张\n\n点击下方问题或直接输入，随时问我！</div>
