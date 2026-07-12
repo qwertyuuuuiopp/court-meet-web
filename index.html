@@ -1426,6 +1426,7 @@
             font-size: 14px;
             line-height: 1.6;
             animation: msgIn 0.3s ease-out;
+            white-space: pre-wrap;
         }
         @keyframes msgIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -2928,7 +2929,17 @@ function applyTactic(tactic) {
         </div>
     </div>
     <div class="chat-messages" id="chatMessages">
-        <div class="chat-msg bot">嗨！我是球场见 🏀 你的AI篮球陪练\n\n今天想练点什么？不用怕，谁都是从第一次运球开始的。\n\n我可以帮你：\n• 制定训练计划\n• 纠正投篮/运球动作\n• 讲解篮球规则\n• 克服上场紧张\n\n点击下方问题或直接输入，随时问我！</div>
+        <div class="chat-msg bot">嗨！我是球场见 🏀 你的AI篮球陪练
+
+今天想练点什么？不用怕，谁都是从第一次运球开始的。
+
+我可以帮你：
+• 制定训练计划
+• 纠正投篮/运球动作
+• 讲解篮球规则
+• 克服上场紧张
+
+点击下方问题或直接输入，随时问我！</div>
     </div>
     <div class="chat-quick-replies" id="chatQuickReplies">
         <button class="chat-quick-btn" onclick="sendQuickReply('新手怎么开始')">新手怎么开始？</button>
