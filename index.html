@@ -1061,6 +1061,255 @@
             margin-bottom: 24px;
         }
 
+        /* AI战术分析按钮 */
+        .tactics-ai-btn {
+            margin-top: 24px;
+            padding: 14px 36px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--gold) 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(85, 37, 131, 0.4);
+        }
+        .tactics-ai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(85, 37, 131, 0.6);
+        }
+
+        /* AI战术分析模态框 */
+        .tactics-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .tactics-modal-overlay.active { display: flex; }
+        .tactics-modal {
+            width: 100%;
+            max-width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: var(--dark-card);
+            border-radius: 24px;
+            border: 1px solid rgba(253, 185, 39, 0.2);
+            box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+            animation: modalSlideUp 0.4s ease-out;
+        }
+        @keyframes modalSlideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .tactics-modal-header {
+            padding: 28px 32px 16px;
+            background: linear-gradient(135deg, var(--purple) 0%, transparent 100%);
+            border-radius: 24px 24px 0 0;
+        }
+        .tactics-modal-header h3 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        .tactics-modal-header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .tactics-modal-close {
+            position: absolute;
+            top: 20px; right: 24px;
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .tactics-modal-close:hover { background: rgba(255,255,255,0.2); }
+        .tactics-modal-body {
+            padding: 20px 32px 32px;
+        }
+        .player-input-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 100px 1fr;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+            transition: background 0.2s;
+        }
+        .player-input-row:hover { background: rgba(255,255,255,0.06); }
+        .player-input-row .p-num {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+        }
+        .player-input-row select,
+        .player-input-row input {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .player-input-row select:focus,
+        .player-input-row input:focus { border-color: var(--gold); }
+        .player-input-row select option { background: var(--dark-card); }
+        .player-input-row .p-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+        .skill-tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .skill-tag-mini {
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .skill-tag-mini.selected {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+            font-weight: 600;
+        }
+        .skill-tag-mini:hover { border-color: var(--gold); }
+        .tactics-analyze-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg, var(--gold) 0%, #e6a200 100%);
+            color: var(--dark);
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tactics-analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(253, 185, 39, 0.4); }
+        .tactics-analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .tactics-result {
+            margin-top: 24px;
+            padding: 24px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(85, 37, 131, 0.15) 0%, rgba(253, 185, 39, 0.08) 100%);
+            border: 1px solid rgba(253, 185, 39, 0.2);
+            display: none;
+        }
+        .tactics-result.active { display: block; animation: msgIn 0.4s ease-out; }
+        .tactics-result .result-badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            background: var(--gold);
+            color: var(--dark);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .tactics-result h4 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .tactics-result .result-reason {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+        .tactics-result .result-score {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .score-item {
+            flex: 1;
+            min-width: 120px;
+        }
+        .score-item .score-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .score-item .score-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+        .score-item .score-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--purple), var(--gold));
+            transition: width 0.6s ease-out;
+        }
+        .score-item .score-val {
+            font-size: 12px;
+            color: var(--gold);
+            margin-top: 2px;
+            font-weight: 600;
+        }
+        .tactics-result .result-action {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+        .result-action-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(253, 185, 39, 0.3);
+            background: transparent;
+            color: var(--gold);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .result-action-btn:hover { background: rgba(253, 185, 39, 0.1); }
+        .result-action-btn.primary {
+            background: var(--gold);
+            color: var(--dark);
+            border-color: var(--gold);
+        }
+        .result-action-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(253, 185, 39, 0.3); }
+
         /* AI陪练角色 */
         .chat-fab {
             position: fixed;
@@ -1256,6 +1505,27 @@
         }
         .chat-skin-notice span { color: var(--gold); cursor: pointer; }
         .chat-skin-notice span:hover { text-decoration: underline; }
+
+        /* 打字动画 */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            padding: 14px 18px !important;
+        }
+        .typing-indicator .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--gold);
+            animation: typingBounce 1.2s infinite;
+        }
+        .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
 
         /* 页脚 */
         .footer {
@@ -1518,7 +1788,8 @@
     <div class="section-header reveal">
         <div class="section-tag">AI Tactics</div>
         <h2 class="section-title">AI战术板</h2>
-        <p class="section-desc">概念演示版——未来输入阵容即可生成针对性战术</p>
+        <p class="section-desc">输入你的阵容，AI为你生成专属战术建议</p>
+        <button class="tactics-ai-btn reveal" onclick="openTacticsModal()">🤖 AI阵容分析</button>
     </div>
     <div class="tactics-wrapper">
         <div class="court-desktop animate-horns-d reveal" id="courtDesktop">
@@ -1648,15 +1919,97 @@
 </footer>
 
 <script>
- // AI陪练角色
- const chatResponses = {
-    '新手怎么开始？': '建议从原地运球开始！每天练15分钟：\n\n1️⃣ 原地运球（左右手各3分钟）\n2️⃣ 指尖拨球（3分钟）\n3️⃣ 绕腿运球（3分钟）\n\n先在家就能练，不需要篮筐！坚持一周球感就有了 🏀',
-    '投篮总是不进怎么办': '投篮不进最常见的原因：\n\n❌ 掌心贴球（应该留空隙）\n❌ 手肘外翻（应该内收）\n❌ 没用腿部发力（屈膝蹬地）\n\n先从近距离（篮筐下1米）开始练手型，稳定后再拉远距离。',
-    '什么是走步': '抱球后走了超过2步就是走步！简单理解：\n\n👉 接球后可以迈2步\n👉 第3步必须出手或传球\n👉 停球后不能移动轴心脚\n\n野球场最常见争议，新手要多注意！',
-    '怎么选球鞋': '选球鞋看三个方面：\n\n👟 脚型：扁平足选支撑型，正常足随便选\n🏀 打法：后卫选轻便低帮，内线选高帮缓震\n📍 场地：水泥地选耐磨大底（XDR）\n\n预算300-500的入门款就够用了！',
-    '明天练什么好': '推荐一套30分钟综合训练：\n\n🏃 5分钟：运球热身\n🎯 15分钟：投篮练习（手型+近距离）\n🏀 10分钟：三步上篮\n\n每天换一个重点，三天一个循环最有效！',
-    '三步上篮怎么练': '三步上篮记住"右-左-跳"：\n\n1️⃣ 第1步：抱球迈右脚\n2️⃣ 第2步：左脚大步跨出，球举到胸前\n3️⃣ 第3步：右脚蹬地起跳，挑篮打板\n\n瞄准篮板右上角小方框，先慢后快！'
-};
+ // ========== AI陪练增强系统 ==========
+ let chatContext = { lastTopic: null, msgCount: 0, userName: null };
+
+ const chatKnowledge = [
+    { keywords: ['运球', '控球', '拍球', 'dribble'], topic: 'dribble',
+      response: '运球是篮球基本功之王！记住4个核心要点：\n\n✅ 五指张开，掌心空出——指腹触球\n✅ 手腕下压发力，不是手臂拍球\n✅ 眼睛看前方，别低头看球\n✅ 左右手必须均衡练习\n\n📍 新手训练路径：\n原地运球(每天15min) → 行进间运球 → 变向运球 → 胯下/背后\n\n坚持一周，球感就来了！',
+      followups: ['变向怎么练', '左手运球不稳', '运球老飞怎么办'] },
+    { keywords: ['投篮', '射球', '投球', 'shoot', '命中'], topic: 'shoot',
+      response: '投篮记住"三个一"口诀：\n\n🎯 一个手型：五指分开，食指中指拨球，掌心留空隙\n🎯 一个发力：屈膝蹬地→腰→肩→肘→腕→指尖，力量由下而上传导\n🎯 一个跟随：出手后保持鹅颈姿势1秒钟\n\n❌ 新手常见错误：掌心贴球、手肘外翻、纯手力投篮\n\n📍 练习路径：篮下1米练手型 → 罚球线练节奏 → 三分线练距离\n\n先追求手型正确，再追求命中率！',
+      followups: ['投篮弧度太低', '罚球怎么练', '三分怎么投'] },
+    { keywords: ['上篮', '三步', 'layup', '挑篮', '打板'], topic: 'layup',
+      response: '三步上篮记住"右-左-跳"节奏：\n\n1️⃣ 第1步：抱球迈右脚（大步）\n2️⃣ 第2步：左脚蹬地起跳（小步）\n3️⃣ 起跳后球举高，手腕挑球打板\n\n🎯 瞄准点：篮板右上角小方框右上角\n\n📍 练习步骤：\n① 无球模仿脚步 → ② 慢速持球上篮 → ③ 加速 → ④ 左手练习\n\n新手先从右侧练起，熟练后再练左侧！',
+      followups: ['左手上篮', '上篮老被封盖', '反手上篮'] },
+    { keywords: ['走步', 'travel', '轴心脚', '带球走'], topic: 'travel',
+      response: '走步是野球场最常见的争议！快速判断方法：\n\n👉 接球后可以迈2步，第3步必须出手或传球\n👉 停球（合球）后不能再移动轴心脚\n👉 轴心脚可以旋转，但不能抬起后落地\n\n⚠️ 容易走步的场景：\n① 三步上篮多走了一步\n② 接球后犹豫，多挪了一步\n③ 转身后轴心脚滑动\n\n建议多看看我们首页的规则手册，搞懂规则上场不慌！',
+      followups: ['二次运球', '什么是翻腕', '发球规则'] },
+    { keywords: ['规则', '犯规', '违例', 'foul', '裁判'], topic: 'rules',
+      response: '新手必须知道的5大规则：\n\n1️⃣ 走步：抱球后不能走超过2步\n2️⃣ 二次运球：停球后不能再运\n3️⃣ 打手犯规：防守时碰到对方手腕以上\n4️⃣ 24秒违例：必须在24秒内投篮且碰框\n5️⃣ 回场违例：过半场后不能再回\n\n野球场建议：先搞懂走步和二次运球，这俩最常被吹。\n\n更多规则看我们的场景化规则手册！',
+      followups: ['挡拆算犯规吗', '什么是3秒', '技术犯规'] },
+    { keywords: ['装备', '球鞋', '护具', '篮球鞋', '鞋'], topic: 'gear',
+      response: '新手装备优先级（别一上来就买贵的）：\n\n🥇 篮球（PU材质，100元左右，室内外通用）\n🥈 运动鞋（不用太贵，耐磨+包裹性好就行）\n🥉 护踝（防扭伤，强烈推荐！尤其体重大的）\n🏅 护膝（体重超70kg建议配）\n\n👟 选鞋指南：\n• 后卫：低帮轻便，方便变向\n• 内线：高帮缓震，保护脚踝\n• 水泥地：选XDR耐磨大底\n\n预算300-500的入门款完全够用！',
+      followups: ['篮球怎么选', '护踝推荐', '入门球鞋'] },
+    { keywords: ['训练', '计划', '练什么', '怎么练', '练习'], topic: 'training',
+      response: '推荐新手一周训练计划（循序渐进）：\n\n📅 周一：运球专项（15min原地+行进间）\n📅 周三：投篮专项（30min，从近到远）\n📅 周五：上篮专项（30min，左右手）\n📅 周日：综合训练（1h，含体能）\n\n💡 关键原则：\n• 每次训练先练基本功，再练实战\n• 每个动作重复50次以上才算练过\n• 记录每次训练内容，看到进步才有动力\n\n坚持比强度更重要！每天15分钟 > 一周一次3小时。',
+      followups: ['体能怎么练', '在家练什么', '热身怎么做'] },
+    { keywords: ['战术', '配合', '挡拆', '跑位', 'pick'], topic: 'tactics',
+      response: '新手必学的3个基础战术：\n\n🏀 挡拆（Pick & Roll）：\n内线帮后卫挡住防守人，后卫借机突破或投篮\n\n🏀 传切（Give & Go）：\n传球后立即空切篮下，接回球上篮\n\n🏀 突分（Drive & Kick）：\n突破吸引防守后分球给外线空位队友\n\n💡 新手建议：先学会挡拆，最简单也最实用。\n\n试试我们上方的AI战术板，输入阵容就能获得专属战术建议！',
+      followups: ['挡拆怎么配合', '怎么跑位', '战术板怎么用'] },
+    { keywords: ['防守', '防守站位', '盯人', '联防', 'defend'], topic: 'defense',
+      response: '新手防守3个核心原则：\n\n🛡️ 降低重心：膝盖弯曲，比进攻者低\n🛡️ 看腰不看球：腰不会假动作，球会晃人\n🛡️ 保持一臂距离：太近被过，太远被投\n\n📍 防守姿势：\n• 双脚与肩同宽，随时准备横移\n• 双手张开，一只干扰视线，一只防运球\n• 永远站在进攻者和篮筐之间\n\n⚠️ 新手常见错误：扑球、跳起、看球不看人',
+      followups: ['怎么防突破', '盯人还是联防', '防守老被过'] },
+    { keywords: ['体能', '体力', '耐力', '跑不动', '喘'], topic: 'fitness',
+      response: '篮球体能训练（在家就能做）：\n\n🏃 有氧基础（每周3次）：\n• 跳绳3分钟×5组（提升心肺+脚步）\n• 慢跑15-20分钟\n\n💪 篮球专项力量：\n• 深蹲15×3组（下肢爆发力）\n• 俯卧撑15×3组（上肢对抗）\n• 平板支撑30秒×3组（核心稳定）\n\n⚡ 间歇冲刺（模拟比赛节奏）：\n• 全场折返跑5趟×3组，组间休息30秒\n\n坚持2周，上场就不会跑两趟就喘了！',
+      followups: ['跳绳练什么', '核心怎么练', '热身怎么做'] },
+    { keywords: ['热身', '拉伸', '准备活动', 'warmup'], topic: 'warmup',
+      response: '打球前必须热身！5分钟热身流程：\n\n1️⃣ 慢跑2圈（提升体温）\n2️⃣ 动态拉伸：\n   • 高抬腿20次\n   • 后踢腿20次\n   • 弓步压腿左右各10次\n   • 手臂大回转各10次\n3️⃣ 篮球专项：\n   • 原地运球2分钟\n   • 近距离投篮10个\n\n⚠️ 不热身直接打 = 脚踝扭伤高风险！\n打完球再做静态拉伸，恢复更快。',
+      followups: ['打完怎么拉伸', '脚踝怎么保护', '抽筋怎么办'] },
+    { keywords: ['心态', '紧张', '不敢', '怕', '害怕', '没自信'], topic: 'mindset',
+      response: '不敢上场是每个新手都经历过的！你不是一个人 💪\n\n📌 克服恐惧的3个方法：\n\n1️⃣ 先自己练：在家运球、投篮，有了基础自信再上场\n2️⃣ 找信任的朋友：先和熟人打，不用怕被笑话\n3️⃣ 设定小目标：不求得分，先做到"不失误"\n\n💡 记住：\n• 每个人都是从菜鸟开始的\n• 球场上最烦的不是新手，是不传球的人\n• 你努力防守、积极跑位，队友就会喜欢你\n\n世界很大，球场见。迈出第一步就是胜利！',
+      followups: ['上场老失误', '被嘲笑怎么办', '怎么融入球队'] },
+    { keywords: ['你好', 'hello', 'hi', '嗨', '在吗'], topic: 'greeting',
+      response: '嗨！我是球场见 🏀 你的AI篮球陪练\n\n今天想练点什么？不用怕，谁都是从第一次运球开始的。\n\n你可以问我：\n🤔 怎么开始学篮球\n🎯 投篮/运球/上篮技巧\n📋 篮球规则讲解\n👟 装备选择建议\n🏃 训练计划制定\n🧠 如何克服上场恐惧\n\n随便问，我都在！',
+      followups: ['新手怎么开始', '明天练什么', '投篮不进'] },
+    { keywords: ['谢谢', '感谢', 'thanks', '有用'], topic: 'thanks',
+      response: '不客气！能帮到你就好 🏀\n\n记住：练习不在于每次多长时间，而在于坚持。\n\n还有什么想了解的随时问我，我一直在！\n\n加油，球场见！💪',
+      followups: ['明天练什么', '帮我制定计划', '还有什么建议'] },
+    { keywords: ['位置', '打什么位置', 'pg', 'sg', 'sf', 'pf', '中锋', '后卫', '前锋'], topic: 'position',
+      response: '篮球5个位置快速指南：\n\n🏀 PG（控球后卫）：球队大脑，组织进攻，运球传球要好\n🏀 SG（得分后卫）：得分主力，投篮能力突出\n🏀 SF（小前锋）：全能型，能突能投能防守\n🏀 PF（大前锋）：内线辅助，篮板+中距离\n🏀 C（中锋）：篮下守护者，篮板+盖帽+背打\n\n📍 怎么选位置？\n• 矮+快 → 后卫（PG/SG）\n• 中等身高+全面 → 前锋（SF）\n• 高+壮 → 内线（PF/C）\n\n新手建议先从PG或SF开始，接触球的机会多，学得快！',
+      followups: ['我适合打什么', '后卫怎么练', '中锋怎么打'] },
+    { keywords: ['受伤', '扭伤', '脚踝', '膝盖', '疼痛', '伤病'], topic: 'injury',
+      response: '运动受伤急救原则（RICE法则）：\n\n🧊 Rest（休息）：立即停止运动\n🧊 Ice（冰敷）：48小时内冰敷15-20分钟/次\n🧊 Compression（加压）：弹性绷带包扎\n🧊 Elevation（抬高）：抬高患处高于心脏\n\n⚠️ 常见伤病预防：\n• 脚踝扭伤 → 穿护踝+热身充分\n• 膝盖疼痛 → 加强股四头肌力量\n• 手指戳伤 → 接球时手指张开微屈\n\n‼️ 严重疼痛或肿胀不退请及时就医！',
+      followups: ['护踝怎么选', '膝盖疼怎么办', '热身怎么做'] }
+ ];
+
+ const encouragements = [
+    '💪 你已经在进步了！坚持就是胜利',
+    '🏀 每个NBA球员都是从零开始的',
+    '⭐ 你问了很好的问题，说明你在认真思考',
+    '🔥 保持这股劲头，你很快就能上场了！',
+    '📝 记得把建议记下来，下次训练试试看'
+ ];
+
+ function getGreeting() {
+    const h = new Date().getHours();
+    if (h < 6) return '凌晨好';
+    if (h < 12) return '早上好';
+    if (h < 14) return '中午好';
+    if (h < 18) return '下午好';
+    if (h < 22) return '晚上好';
+    return '夜深了';
+ }
+
+ function smartMatch(text) {
+    const lowerText = text.toLowerCase();
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const entry of chatKnowledge) {
+        let score = 0;
+        for (const kw of entry.keywords) {
+            if (lowerText.includes(kw.toLowerCase())) {
+                score += kw.length; // Longer keyword = higher weight
+            }
+        }
+        if (score > bestScore) {
+            bestScore = score;
+            bestMatch = entry;
+        }
+    }
+    return bestMatch;
+ }
 
 function toggleChat() {
     const w = document.getElementById('chatWindow');
@@ -1670,14 +2023,61 @@ function closeChat() {
     document.getElementById('chatWindow').classList.remove('active');
 }
 
+function showTypingIndicator() {
+    const container = document.getElementById('chatMessages');
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg bot typing-indicator';
+    typing.id = 'typingIndicator';
+    typing.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+    container.appendChild(typing);
+    container.scrollTop = container.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const typing = document.getElementById('typingIndicator');
+    if (typing) typing.remove();
+}
+
 function sendQuickReply(text) {
     addMessage(text, 'user');
-    setTimeout(() => {
-        const response = chatResponses[text] || '这个问题很棒！我正在学习中，后续版本我会接入更强大的AI，给你更专业的篮球建议。\n\n现在你可以问我关于运球、投篮、上篮、规则、装备的问题！';
-        addMessage(response, 'bot');
-    }, 600);
-    // Hide quick replies after first use
+    chatContext.msgCount++;
     document.querySelector('.chat-quick-replies').style.display = 'none';
+
+    showTypingIndicator();
+    setTimeout(() => {
+        hideTypingIndicator();
+        const match = smartMatch(text);
+        let response;
+        if (match) {
+            response = match.response;
+            chatContext.lastTopic = match.topic;
+        } else {
+            response = '这个问题很棒！让我想想...\n\n目前我擅长回答：运球、投篮、上篮、规则、装备、训练、战术、防守、体能、心态等问题。\n\n试试问我"怎么开始学篮球"？ 🏀';
+        }
+
+        // Add follow-up suggestions
+        if (match && match.followups) {
+            response += '\n\n💡 你还可以问：' + match.followups.map(f => '"' + f + '"').join(' / ');
+        }
+
+        // Add encouragement every 3 messages
+        if (chatContext.msgCount > 0 && chatContext.msgCount % 3 === 0) {
+            response += '\n\n— ' + encouragements[chatContext.msgCount % encouragements.length];
+        }
+
+        addMessage(response, 'bot');
+
+        // Show contextual quick replies
+        if (match && match.followups) {
+            showFollowUpReplies(match.followups);
+        }
+    }, 800 + Math.random() * 400);
+}
+
+function showFollowUpReplies(followups) {
+    const container = document.getElementById('chatQuickReplies');
+    container.innerHTML = followups.map(f => `<button class="chat-quick-btn" onclick="sendQuickReply('${f}')">${f}</button>`).join('');
+    container.style.display = 'flex';
 }
 
 function sendUserMessage() {
@@ -1687,30 +2087,54 @@ function sendUserMessage() {
 
     addMessage(text, 'user');
     input.value = '';
+    chatContext.msgCount++;
 
+    showTypingIndicator();
     setTimeout(() => {
-        // Check for keywords
-        let response = '这个问题很好！我正在快速学习中 🏀\n\n目前我能回答：新手入门、投篮技巧、上篮练习、篮球规则、球鞋选择、训练计划等问题。\n\n未来版本我会接入AI大模型，给你更专业的篮球指导！';
+        hideTypingIndicator();
 
-        const keywords = {
-            '运球': '运球是篮球基本功中的基本功！记住4个要点：\n\n✅ 五指张开，掌心空出\n✅ 手腕下压发力，不是拍球\n✅ 眼睛看前方，别低头\n✅ 左右手都要练\n\n先从原地运球开始，每天15分钟，一周后球感就来了！',
-            '投篮': '投篮记住"三个一"：\n\n🎯 一个手型：五指分开，食指中指拨球\n🎯 一个发力：屈膝蹬地，腿到手传导\n🎯 一个跟随：出手后保持鹅颈姿势\n\n先从篮下1米练起，命中率上来再拉远！',
-            '规则': '新手最常犯规的3个：\n\n1️⃣ 走步：抱球后不能走超过2步\n2️⃣ 二次运球：停球后再运球\n3️⃣ 打手：防守时碰到对方手腕\n\n建议先看看我们首页的规则手册！',
-            '装备': '新手装备优先级：\n\n🥇 篮球（PU球，100左右）\n🥈 运动鞋（不用太贵，耐磨就行）\n🥉 护踝（防扭伤，强烈推荐）\n🏅 护膝（体重大的话必备）\n\n别一开始就买贵的，先确认自己真的喜欢再投资！',
-            '训练': '推荐新手一周训练计划：\n\n📅 周一：运球专项（15分钟）\n📅 周三：投篮专项（30分钟）\n📅 周五：上篮专项（30分钟）\n📅 周日：综合训练（1小时）\n\n每天不需要太久，坚持比强度更重要！',
-            '你好': '嗨！我是球场见 🏀\n\n今天想练点什么？不用怕，谁都是从第一次运球开始的。\n\n你可以问我：怎么开始、投篮不进怎么办、规则搞不懂...随便问！',
-            'hello': '嗨！我是球场见 🏀\n\n今天想练点什么？不用怕，谁都是从第一次运球开始的。\n\n你可以问我：怎么开始、投篮不进怎么办、规则搞不懂...随便问！'
-        };
+        const match = smartMatch(text);
+        let response;
 
-        for (const [key, val] of Object.entries(keywords)) {
-            if (text.includes(key)) {
-                response = val;
-                break;
+        if (match) {
+            response = match.response;
+            chatContext.lastTopic = match.topic;
+        } else {
+            // Context-aware fallback
+            if (chatContext.lastTopic) {
+                response = `你刚才问了关于${chatContext.lastTopic === 'greeting' ? '打招呼' : chatContext.lastTopic}的问题，我理解你可能想深入了解。\n\n不过这个问题我还没完全学会 😅\n\n你可以试试问我：\n• 怎么运球/投篮/上篮\n• 篮球规则\n• 训练计划\n• 装备选择\n• 怎么克服紧张\n\n或者直接点下面的快捷问题！`;
+            } else {
+                response = `你好${getGreeting()}！我是球场见 🏀\n\n这个问题我还在学习中，但我擅长以下话题：\n\n🏀 运球技巧  🎯 投篮姿势  🏃 上篮练习\n📋 篮球规则  👟 装备选择  📅 训练计划\n🧠 心态调整  🛡️ 防守技巧  ⚡ 体能训练\n\n随便挑一个问我吧！`;
             }
         }
 
+        // Add follow-up suggestions
+        if (match && match.followups) {
+            response += '\n\n💡 你还可以问：' + match.followups.map(f => '"' + f + '"').join(' / ');
+        }
+
+        // Add encouragement every 3 messages
+        if (chatContext.msgCount > 0 && chatContext.msgCount % 3 === 0) {
+            response += '\n\n— ' + encouragements[chatContext.msgCount % encouragements.length];
+        }
+
         addMessage(response, 'bot');
-    }, 800);
+
+        // Show contextual quick replies
+        if (match && match.followups) {
+            showFollowUpReplies(match.followups);
+        } else {
+            // Show default quick replies
+            const container = document.getElementById('chatQuickReplies');
+            container.innerHTML = `
+                <button class="chat-quick-btn" onclick="sendQuickReply('新手怎么开始')">新手怎么开始？</button>
+                <button class="chat-quick-btn" onclick="sendQuickReply('投篮不进')">投篮不进怎么办？</button>
+                <button class="chat-quick-btn" onclick="sendQuickReply('三步上篮怎么练')">三步上篮</button>
+                <button class="chat-quick-btn" onclick="sendQuickReply('怎么克服紧张')">不敢上场</button>
+            `;
+            container.style.display = 'flex';
+        }
+    }, 800 + Math.random() * 500);
 }
 
 function addMessage(text, type) {
@@ -1722,7 +2146,7 @@ function addMessage(text, type) {
     container.scrollTop = container.scrollHeight;
 }
 
-// Enter键发送（chatInput在DOM后段，确保元素存在再绑定）
+// Enter键发送
 const chatInputEl = document.getElementById('chatInput');
 if (chatInputEl) {
     chatInputEl.addEventListener('keypress', function(e) {
@@ -1987,6 +2411,193 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// ========== AI战术板个性化 ==========
+const skillOptions = ['投篮', '运球', '速度', '力量', '篮板', '传球', '防守', '三分'];
+const positionOptions = [
+    { val: 'PG', label: 'PG · 控球后卫' },
+    { val: 'SG', label: 'SG · 得分后卫' },
+    { val: 'SF', label: 'SF · 小前锋' },
+    { val: 'PF', label: 'PF · 大前锋' },
+    { val: 'C', label: 'C · 中锋' }
+];
+
+function openTacticsModal() {
+    const overlay = document.getElementById('tacticsModalOverlay');
+    const container = document.getElementById('playerInputs');
+    container.innerHTML = '';
+
+    for (let i = 1; i <= 5; i++) {
+        const row = document.createElement('div');
+        row.className = 'player-input-row';
+        row.innerHTML = `
+            <div class="p-num">${i}</div>
+            <div>
+                <div class="p-label">位置</div>
+                <select id="pos_${i}" style="width:100%;">
+                    ${positionOptions.map(p => `<option value="${p.val}" ${i === 1 ? 'selected' : ''}>${p.label}</option>`).join('')}
+                </select>
+            </div>
+            <div>
+                <div class="p-label">身高(cm)</div>
+                <input type="number" id="hgt_${i}" value="${[175, 180, 185, 190, 195][i-1]}" min="150" max="230" style="width:100%;">
+            </div>
+            <div>
+                <div class="p-label">特长(可多选)</div>
+                <div class="skill-tags-wrapper" id="skills_${i}">
+                    ${skillOptions.map(s => `<span class="skill-tag-mini" onclick="toggleSkillTag(this)" data-skill="${s}">${s}</span>`).join('')}
+                </div>
+            </div>
+        `;
+        container.appendChild(row);
+    }
+
+    // Pre-select some skills for demo
+    const defaults = [
+        [0, 1, 2],   // PG: 投篮, 运球, 速度
+        [0, 7],      // SG: 投篮, 三分
+        [2, 5],      // SF: 速度, 传球
+        [3, 4, 6],   // PF: 力量, 篮板, 防守
+        [3, 4, 6]    // C: 力量, 篮板, 防守
+    ];
+    defaults.forEach((skills, idx) => {
+        const wrapper = document.getElementById(`skills_${idx + 1}`);
+        if (wrapper) {
+            skills.forEach(s => {
+                const tag = wrapper.querySelectorAll('.skill-tag-mini')[s];
+                if (tag) tag.classList.add('selected');
+            });
+        }
+    });
+
+    document.getElementById('tacticsResult').classList.remove('active');
+    overlay.classList.add('active');
+}
+
+function closeTacticsModal() {
+    document.getElementById('tacticsModalOverlay').classList.remove('active');
+}
+
+function toggleSkillTag(el) {
+    el.classList.toggle('selected');
+}
+
+function analyzeTactics() {
+    const btn = document.getElementById('analyzeBtn');
+    btn.disabled = true;
+    btn.textContent = '🤔 AI正在分析阵容...';
+
+    setTimeout(() => {
+        const players = [];
+        for (let i = 1; i <= 5; i++) {
+            const pos = document.getElementById(`pos_${i}`).value;
+            const hgt = parseInt(document.getElementById(`hgt_${i}`).value) || 180;
+            const skillEls = document.querySelectorAll(`#skills_${i} .skill-tag-mini.selected`);
+            const skills = Array.from(skillEls).map(e => e.dataset.skill);
+            players.push({ pos, height: hgt, skills });
+        }
+
+        // 分析阵容特征
+        const avgHeight = players.reduce((s, p) => s + p.height, 0) / 5;
+        const allSkills = players.flatMap(p => p.skills);
+        const hasShooting = allSkills.filter(s => s === '投篮' || s === '三分').length;
+        const hasSpeed = allSkills.filter(s => s === '速度').length;
+        const hasStrength = allSkills.filter(s => s === '力量').length;
+        const hasRebounding = allSkills.filter(s => s === '篮板').length;
+        const hasPassing = allSkills.filter(s => s === '传球').length;
+        const bigCount = players.filter(p => p.pos === 'PF' || p.pos === 'C').length;
+        const guardCount = players.filter(p => p.pos === 'PG' || p.pos === 'SG').length;
+        const tallest = Math.max(...players.map(p => p.height));
+        const shortest = Math.min(...players.map(p => p.height));
+
+        // 为每个战术评分
+        const scores = {
+            horns: 0,
+            pickroll: 0,
+            triangle: 0,
+            fastbreak: 0
+        };
+        const reasons = {};
+
+        // 牛角战术: 需要双内线+投篮能力+好PG
+        scores.horns = 50;
+        if (bigCount >= 2) scores.horns += 25;
+        else if (bigCount === 1) scores.horns += 10;
+        if (hasShooting >= 2) scores.horns += 15;
+        if (players.some(p => p.pos === 'PG' && p.skills.includes('运球'))) scores.horns += 10;
+        reasons.horns = `你的阵容有${bigCount}名内线球员${bigCount >= 2 ? '，双内线落位牛角位完美匹配' : '，建议增加一名内线以发挥最大效果'}。${hasShooting >= 2 ? '全队投篮能力突出，外弹投篮威胁大。' : '投篮能力需加强，可侧重内线配合。'}${avgHeight > 185 ? '平均身高' + Math.round(avgHeight) + 'cm，内线优势明显。' : ''}`;
+
+        // 挡拆战术: 需要后卫+内线组合，普适性强
+        scores.pickroll = 60;
+        if (guardCount >= 1 && bigCount >= 1) scores.pickroll += 25;
+        if (hasPassing >= 1) scores.pickroll += 10;
+        if (players.some(p => p.pos === 'PG' && (p.skills.includes('运球') || p.skills.includes('速度')))) scores.pickroll += 5;
+        reasons.pickroll = `后卫+内线的经典组合${guardCount >= 1 && bigCount >= 1 ? '，挡拆战术天然适配你的阵容' : '，建议调整阵容结构'}。${hasPassing >= 1 ? '有传球能力强的球员，挡拆后分球质量高。' : ''}挡拆是篮球最基础战术，学习成本低，执行成功率高。`;
+
+        // 三角进攻: 需要强力低位球员+传球意识
+        scores.triangle = 40;
+        if (players.some(p => (p.pos === 'C' || p.pos === 'PF') && p.skills.includes('力量'))) scores.triangle += 25;
+        if (hasPassing >= 2) scores.triangle += 20;
+        if (tallest >= 190) scores.triangle += 10;
+        if (hasRebounding >= 2) scores.triangle += 5;
+        reasons.triangle = `${tallest >= 190 ? '最高球员' + tallest + 'cm，' : ''}${players.some(p => (p.pos === 'C' || p.pos === 'PF') && p.skills.includes('力量')) ? '有力量型内线可在低位背打。' : '缺少力量型内线，低位威胁不足。'}${hasPassing >= 2 ? '全队传球意识好，三角传切配合流畅。' : '传球能力需提升，否则三角进攻容易停滞。'}三角进攻上限高但学习成本也高，适合有一定默契的队伍。`;
+
+        // 快攻战术: 需要速度+后卫
+        scores.fastbreak = 45;
+        if (hasSpeed >= 2) scores.fastbreak += 25;
+        else if (hasSpeed === 1) scores.fastbreak += 10;
+        if (guardCount >= 2) scores.fastbreak += 15;
+        if (avgHeight < 185) scores.fastbreak += 10;
+        if (players.some(p => p.skills.includes('传球'))) scores.fastbreak += 5;
+        reasons.fastbreak = `${hasSpeed >= 2 ? '全队有' + hasSpeed + '名速度型球员，快攻推进能力强。' : '速度型球员不足，快攻效果受限。'}${avgHeight < 185 ? '阵容偏灵活，适合跑轰打法。' : '阵容偏高大，落阵地更稳妥。'}${guardCount >= 2 ? '后卫线人员充足，可形成多线快攻。' : ''}`;
+
+        // 找到最佳战术
+        const bestTactic = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        const tacticNames = {
+            horns: '牛角战术 (Horns)',
+            pickroll: '挡拆战术 (Pick & Roll)',
+            triangle: '三角进攻 (Triangle)',
+            fastbreak: '快攻战术 (Fast Break)'
+        };
+        const tacticEmojis = { horns: '🏀', pickroll: '🏀', triangle: '🔺', fastbreak: '⚡' };
+
+        // 渲染结果
+        const result = document.getElementById('tacticsResult');
+        result.innerHTML = `
+            <div class="result-badge">✨ 最佳匹配 ${Math.round(scores[bestTactic])}%</div>
+            <h4>${tacticEmojis[bestTactic]} 推荐战术：${tacticNames[bestTactic]}</h4>
+            <p class="result-reason">${reasons[bestTactic]}</p>
+            <div class="result-score">
+                ${Object.keys(scores).map(t => `
+                    <div class="score-item">
+                        <div class="score-label">${tacticNames[t]}</div>
+                        <div class="score-bar"><div class="score-fill" style="width: ${Math.min(scores[t], 100)}%"></div></div>
+                        <div class="score-val">${Math.round(scores[t])}%</div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="result-action">
+                <button class="result-action-btn primary" onclick="applyTactic('${bestTactic}')">查看战术演示</button>
+                <button class="result-action-btn" onclick="closeTacticsModal()">关闭</button>
+            </div>
+        `;
+        result.classList.add('active');
+
+        btn.disabled = false;
+        btn.textContent = '🔍 重新分析';
+    }, 1200);
+}
+
+function applyTactic(tactic) {
+    closeTacticsModal();
+    // 滚动到战术板
+    document.getElementById('tactics').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // 切换到对应战术
+    setTimeout(() => {
+        const tab = document.querySelector(`.tactics-tab-d[onclick*="${tactic}"]`);
+        if (tab) switchTacticDesktop(tactic, tab);
+    }, 600);
+}
+
 // 完整回合演示步骤高亮同步
 (function() {
     const steps = document.querySelectorAll('#fpSteps .fp-step');
@@ -2009,6 +2620,22 @@ document.head.appendChild(style);
 })();
 </script>
 
+<!-- AI战术分析模态框 -->
+<div class="tactics-modal-overlay" id="tacticsModalOverlay" onclick="if(event.target===this)closeTacticsModal()">
+    <div class="tactics-modal" style="position:relative;">
+        <button class="tactics-modal-close" onclick="closeTacticsModal()">✕</button>
+        <div class="tactics-modal-header">
+            <h3>🤖 AI阵容战术分析</h3>
+            <p>输入你的5人阵容信息，AI为你匹配最佳战术方案</p>
+        </div>
+        <div class="tactics-modal-body">
+            <div id="playerInputs"></div>
+            <button class="tactics-analyze-btn" id="analyzeBtn" onclick="analyzeTactics()">🔍 AI分析最佳战术</button>
+            <div class="tactics-result" id="tacticsResult"></div>
+        </div>
+    </div>
+</div>
+
 <!-- AI陪练浮动窗口 -->
 <div class="chat-fab" id="chatFab" onclick="toggleChat()">
     🏀
@@ -2025,15 +2652,15 @@ document.head.appendChild(style);
         <div class="chat-close" onclick="closeChat()">✕</div>
     </div>
     <div class="chat-messages" id="chatMessages">
-        <div class="chat-msg bot">嗨！我是球场见 🏀\n\n今天想练点什么？不用怕，谁都是从第一次运球开始的。\n\n你可以问我：怎么开始、投篮不进怎么办、规则搞不懂...随便问！</div>
+        <div class="chat-msg bot">嗨！我是球场见 🏀 你的AI篮球陪练\n\n今天想练点什么？不用怕，谁都是从第一次运球开始的。\n\n我可以帮你：\n• 制定训练计划\n• 纠正投篮/运球动作\n• 讲解篮球规则\n• 克服上场紧张\n\n点击下方问题或直接输入，随时问我！</div>
     </div>
     <div class="chat-quick-replies" id="chatQuickReplies">
-        <button class="chat-quick-btn" onclick="sendQuickReply('新手怎么开始？')">新手怎么开始？</button>
-        <button class="chat-quick-btn" onclick="sendQuickReply('投篮总是不进怎么办')">投篮不进怎么办？</button>
-        <button class="chat-quick-btn" onclick="sendQuickReply('什么是走步')">什么是走步？</button>
-        <button class="chat-quick-btn" onclick="sendQuickReply('怎么选球鞋')">怎么选球鞋？</button>
-        <button class="chat-quick-btn" onclick="sendQuickReply('明天练什么好')">明天练什么？</button>
-        <button class="chat-quick-btn" onclick="sendQuickReply('三步上篮怎么练')">三步上篮怎么练？</button>
+        <button class="chat-quick-btn" onclick="sendQuickReply('新手怎么开始')">新手怎么开始？</button>
+        <button class="chat-quick-btn" onclick="sendQuickReply('投篮不进')">投篮不进怎么办？</button>
+        <button class="chat-quick-btn" onclick="sendQuickReply('三步上篮怎么练')">三步上篮</button>
+        <button class="chat-quick-btn" onclick="sendQuickReply('怎么选球鞋')">选球鞋</button>
+        <button class="chat-quick-btn" onclick="sendQuickReply('怎么训练')">训练计划</button>
+        <button class="chat-quick-btn" onclick="sendQuickReply('不敢上场怎么办')">不敢上场</button>
     </div>
     <div class="chat-input-bar">
         <input class="chat-input" id="chatInput" placeholder="输入你的篮球问题..." onkeydown="if(event.key==='Enter')sendUserMessage()">
