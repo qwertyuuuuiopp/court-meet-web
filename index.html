@@ -552,6 +552,66 @@
         .animate-fastbreak-d #pd2 { animation: fastBreakWing 3s ease-in-out infinite; }
         .animate-fastbreak-d #pd3 { animation: fastBreakWing2 3s ease-in-out infinite; }
 
+        /* 牛角横切动画 */
+        @keyframes flareScreen {
+            0%, 100% { left: 35%; top: 55%; }
+            50% { left: 55%; top: 50%; }
+        }
+        @keyframes flareShooter {
+            0%, 100% { left: 65%; top: 55%; }
+            50% { left: 75%; top: 65%; }
+        }
+        @keyframes flarePass {
+            0%, 100% { left: 50%; top: 78%; }
+            50% { left: 45%; top: 60%; }
+        }
+        .animate-hornsflare-d #pd2 { animation: flareScreen 3s ease-in-out infinite; }
+        .animate-hornsflare-d #pd3 { animation: flareShooter 3s ease-in-out infinite; }
+        .animate-hornsflare-d #pd1 { animation: flarePass 3s ease-in-out infinite; }
+
+        /* 错位单打动画 */
+        @keyframes isoClear {
+            0%, 100% { left: 50%; top: 78%; }
+            50% { left: 25%; top: 55%; }
+        }
+        @keyframes isoDrive {
+            0%, 100% { left: 35%; top: 55%; }
+            50% { left: 40%; top: 25%; }
+        }
+        .animate-isolation-d #pd1 { animation: isoClear 3s ease-in-out infinite; }
+        .animate-isolation-d #pd2 { animation: isoDrive 3s ease-in-out infinite; }
+
+        /* 反跑动画 */
+        @keyframes backdoorCut {
+            0% { left: 65%; top: 55%; }
+            30% { left: 70%; top: 50%; }
+            70% { left: 55%; top: 20%; }
+            100% { left: 50%; top: 15%; }
+        }
+        @keyframes backdoorPass {
+            0%, 100% { left: 50%; top: 78%; }
+            50% { left: 55%; top: 60%; }
+        }
+        .animate-backdoor-d #pd3 { animation: backdoorCut 3s ease-in-out infinite; }
+        .animate-backdoor-d #pd1 { animation: backdoorPass 3s ease-in-out infinite; }
+
+        /* 空间挡拆动画 */
+        @keyframes spreadPnr {
+            0%, 100% { left: 50%; top: 78%; }
+            50% { left: 40%; top: 55%; }
+        }
+        @keyframes spreadScreen {
+            0%, 100% { left: 35%; top: 55%; }
+            50% { left: 42%; top: 68%; }
+        }
+        @keyframes spreadCorner {
+            0%, 100% { left: 20%; top: 35%; }
+            50% { left: 15%; top: 75%; }
+        }
+        .animate-spreadpnr-d #pd1 { animation: spreadPnr 3s ease-in-out infinite; }
+        .animate-spreadpnr-d #pd2 { animation: spreadScreen 3s ease-in-out infinite; }
+        .animate-spreadpnr-d #pd4 { animation: spreadCorner 3s ease-in-out infinite; }
+
         /* 完整回合演示 */
         .full-play-section {
             background: linear-gradient(to bottom, var(--dark), rgba(85, 37, 131, 0.05), var(--dark));
@@ -1922,11 +1982,15 @@
                 <div class="t-step-d"><span class="num">4</span> 被放空的内线外弹接球投篮</div>
                 <div class="t-step-d"><span class="num">5</span> 若防守收缩，弱侧SF切入篮下</div>
             </div>
-            <div class="tactics-tabs-d">
+            <div class="tactics-tabs-d" style="flex-wrap:wrap;gap:6px;">
                 <div class="tactics-tab-d active" onclick="switchTacticDesktop('horns', this)">牛角战术</div>
                 <div class="tactics-tab-d" onclick="switchTacticDesktop('pickroll', this)">挡拆战术</div>
                 <div class="tactics-tab-d" onclick="switchTacticDesktop('triangle', this)">三角进攻</div>
                 <div class="tactics-tab-d" onclick="switchTacticDesktop('fastbreak', this)">快攻战术</div>
+                <div class="tactics-tab-d" onclick="switchTacticDesktop('hornsflare', this)">牛角横切</div>
+                <div class="tactics-tab-d" onclick="switchTacticDesktop('isolation', this)">错位单打</div>
+                <div class="tactics-tab-d" onclick="switchTacticDesktop('backdoor', this)">反跑战术</div>
+                <div class="tactics-tab-d" onclick="switchTacticDesktop('spreadpnr', this)">空间挡拆</div>
             </div>
         </div>
     </div>
@@ -2692,6 +2756,42 @@ function switchTacticDesktop(tactic, btn) {
             fallback: '若防守回位形成人数均等，立即减速落阵地，避免强行进攻失误',
             steps: ['抢到篮板或完成抢断，第一时间长传或推进', 'PG沿中路快速推进，边锋两侧快下', '阅读防守人数：3打2时中间PG吸引防守', 'PG分球给两侧任一边锋上篮', '若防守回位，落阵地重新组织'],
             active: 'fastbreak'
+        },
+        hornsflare: {
+            title: '🏀 牛角横切 (Horns Flare)',
+            desc: '牛角阵型变体。双内线牛角位落位后，一侧内线不是上提掩护，而是横移为射手做flare screen（闪掩护），射手借掩护向外跑出空位接球投篮。另一侧内线准备接应。',
+            condition: '半场阵地进攻，有精准射手和投篮能力强的内线时效果最佳',
+            finish: '射手借flare screen接球三分 / 内线外弹中距离 / PG突破上篮',
+            fallback: '若flare被防守识破，PG直接借另一侧内线掩护突破，或回传重新组织',
+            steps: ['双内线牛角位落位，PG弧顶持球', '一侧内线横移为射手做flare screen', '射手借掩护外弹到翼侧接球', 'PG传球给射手投篮或内线接应', '若防守换防，射手传给顺下内线'],
+            active: 'hornsflare'
+        },
+        isolation: {
+            title: '🎯 错位单打 (Isolation)',
+            desc: '通过挡拆制造换防错位（大打小/小打大），然后清空一侧让优势球员单打。现代NBA最常见的终结方式之一，要求有强力单打球员。',
+            condition: '有明显单打优势球员（速度快/身体壮），且已制造错位',
+            finish: '大打小背身得分 / 小打大突破上篮 / 吸引包夹后分球',
+            fallback: '若单打受阻，立即传给空位队友，或借第二个掩护重新组织',
+            steps: ['通过挡拆或换防制造错位', '其他球员拉开清空一侧', '识别错位类型：大打小或小打大', '优势球员单打终结', '若吸引包夹立即分球空位'],
+            active: 'isolation'
+        },
+        backdoor: {
+            title: '🏃 反跑战术 (Backdoor Cut)',
+            desc: '当防守人过度贴身防守（overplay）时，进攻球员假装向外跑然后突然反方向切入篮下，接队友传球上篮。这是破解紧逼防守的经典战术。',
+            condition: '防守人过度贴身、overplay传球路线时最佳',
+            finish: '反跑接球上篮 / 传球被补防后分球外线 / 造犯规罚球',
+            fallback: '若反跑被识破，继续向外跑接球重新组织，或设置掩护创造机会',
+            steps: ['观察防守人是否过度贴身', '进攻球员假装向外线跑', '突然变向反跑切入篮下', '队友及时传球（高吊或击地）', '接球上篮或分球给补防漏掉的人'],
+            active: 'backdoor'
+        },
+        spreadpnr: {
+            title: '🎯 空间挡拆 (Spread Pick & Roll)',
+            desc: '4名射手全部拉开到三分线外，仅PG和内线做挡拆。最大化挡拆空间和传球路线，防守一旦收缩就会被三分惩罚。现代篮球的标志性战术。',
+            condition: '有4名以上三分射手和优秀挡拆PG的阵容',
+            finish: 'PG突破上篮 / 内线顺下吃饼 / 射手接分球三分 / PG中距离',
+            fallback: '若挡拆被夹击，PG立即出球给短顺下的内线，4打3终结',
+            steps: ['4名射手落位三分线外拉开空间', 'PG和内线在高位做挡拆', '阅读防守：收缩则分球三分', '不收缩则PG突破或内线顺下', '弱侧射手准备接球投篮'],
+            active: 'spreadpnr'
         }
     };
 
@@ -2709,9 +2809,9 @@ function switchTacticDesktop(tactic, btn) {
         <div class="tactics-steps-d">
             ${data.steps.map((step, i) => `<div class="t-step-d"><span class="num">${i + 1}</span> ${step}</div>`).join('')}
         </div>
-        <div class="tactics-tabs-d">
-            ${['horns', 'pickroll', 'triangle', 'fastbreak'].map(t => {
-                const labels = { horns: '牛角战术', pickroll: '挡拆战术', triangle: '三角进攻', fastbreak: '快攻战术' };
+        <div class="tactics-tabs-d" style="flex-wrap:wrap;gap:6px;">
+            ${['horns', 'pickroll', 'triangle', 'fastbreak', 'hornsflare', 'isolation', 'backdoor', 'spreadpnr'].map(t => {
+                const labels = { horns: '牛角战术', pickroll: '挡拆战术', triangle: '三角进攻', fastbreak: '快攻战术', hornsflare: '牛角横切', isolation: '错位单打', backdoor: '反跑战术', spreadpnr: '空间挡拆' };
                 return `<div class="tactics-tab-d ${t === tactic ? 'active' : ''}" onclick="switchTacticDesktop('${t}', this)">${labels[t]}</div>`;
             }).join('')}
         </div>
@@ -2987,34 +3087,34 @@ function analyzeTactics() {
             reasons[key] = reason || '阵容基本适配此战术。';
         }
 
-        // 排序取前3
+        // 排序取前5
         const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-        const top3 = sorted.slice(0, 3);
+        const top5 = sorted.slice(0, 5);
 
         // 如果有DeepSeek API，用AI生成更深入的分析
         if (hasApiKey() && getRemainingUsage() > 0) {
             btn.textContent = '🤖 DeepSeek深度分析中...';
-            generateAITacticalAnalysis(players, teamTraits, oppHeight, oppSpeed, oppWeaknesses, top3, scores, reasons);
+            generateAITacticalAnalysis(players, teamTraits, oppHeight, oppSpeed, oppWeaknesses, top5, scores, reasons);
         } else {
-            renderTacticsResult(top3, scores, reasons, null);
+            renderTacticsResult(top5, scores, reasons, null);
             btn.disabled = false;
             btn.textContent = '🔍 重新分析';
         }
     }, 800);
 }
 
-async function generateAITacticalAnalysis(players, teamTraits, oppHeight, oppSpeed, oppWeaknesses, top3, scores, reasons) {
+async function generateAITacticalAnalysis(players, teamTraits, oppHeight, oppSpeed, oppWeaknesses, top5, scores, reasons) {
     const teamDesc = `我方阵容：${players.map((p,i) => `${i+1}号(${p.pos},${p.height}cm,特长:${p.skills.join('/')||'无'})`).join('；')}。平均身高${teamTraits.avgHeight}cm，${teamTraits.bigs}名内线，${teamTraits.guards}名后卫。投篮${teamTraits.shooting}人，速度${teamTraits.speed}人，传球${teamTraits.passing}人。`;
     const oppDesc = `对手特点：平均身高${oppHeight}，速度${oppSpeed}，弱点：${oppWeaknesses.length ? oppWeaknesses.map(w => ({slowBigs:'内线移动慢',weakPerimeter:'外线防守弱',weakInterior:'内线防守弱',weakSwitch:'换防不默契',weakHelp:'协防意识差',overplay:'防守过贴',slowTeam:'整体速度慢',smallGuards:'后卫偏矮',oldTeam:'体能不足',mismatch:'有错位可利用'}[w])).join('、') : '暂无明显弱点'}。`;
-    const top3Desc = top3.map(([k, v], i) => `第${i+1}推荐：${tacticsDB[k].name}(${Math.round(v)}分)。理由：${reasons[k]}`).join('\n');
+    const top5Desc = top5.map(([k, v], i) => `第${i+1}推荐：${tacticsDB[k].name}(${Math.round(v)}分)。理由：${reasons[k]}`).join('\n');
 
     const prompt = `作为篮球战术分析师，根据以下信息给出个性化战术建议：
 
 ${teamDesc}
 ${oppDesc}
 
-算法初筛排名前三的战术：
-${top3Desc}
+算法初筛排名前五的战术：
+${top5Desc}
 
 请基于以上信息，用100-150字给出你的专业见解：
 1. 确认或调整推荐排序
@@ -3042,12 +3142,12 @@ ${top3Desc}
             const data = await response.json();
             const aiAnalysis = data.choices[0].message.content;
             incrementUsage();
-            renderTacticsResult(top3, scores, reasons, aiAnalysis);
+            renderTacticsResult(top5, scores, reasons, aiAnalysis);
         } else {
-            renderTacticsResult(top3, scores, reasons, null);
+            renderTacticsResult(top5, scores, reasons, null);
         }
     } catch (e) {
-        renderTacticsResult(top3, scores, reasons, null);
+        renderTacticsResult(top5, scores, reasons, null);
     }
 
     const btn = document.getElementById('analyzeBtn');
@@ -3055,61 +3155,50 @@ ${top3Desc}
     btn.textContent = '🔍 重新分析';
 }
 
-function renderTacticsResult(top3, scores, reasons, aiAnalysis) {
+function renderTacticsResult(top5, scores, reasons, aiAnalysis) {
     const result = document.getElementById('tacticsResult');
-    const [bestKey, bestScore] = top3[0];
+    const [bestKey, bestScore] = top5[0];
     const best = tacticsDB[bestKey];
 
     let html = `
         <div class="result-badge">✨ 最佳匹配 ${Math.round(bestScore)}%</div>
-        <h4>${best.emoji} 推荐战术：${best.name}</h4>
-        <p class="result-reason">${best.desc}</p>
-        <p class="result-reason" style="color:var(--gold);font-size:13px;">${reasons[bestKey]}</p>
     `;
 
     if (aiAnalysis) {
         html += `
-            <div style="margin:16px 0;padding:16px;border-radius:12px;background:rgba(85,37,131,0.15);border:1px solid rgba(85,37,131,0.3);">
+            <div style="margin:12px 0 16px;padding:16px;border-radius:12px;background:rgba(85,37,131,0.15);border:1px solid rgba(85,37,131,0.3);">
                 <div style="color:#7B3FA0;font-weight:700;font-size:13px;margin-bottom:8px;">🤖 DeepSeek AI深度分析</div>
                 <div style="font-size:13px;line-height:1.7;color:var(--text-primary);">${aiAnalysis}</div>
             </div>
         `;
     }
 
-    // Top 3 评分
-    html += '<div class="result-score">';
-    top3.forEach(([k, v]) => {
+    // 5个战术详情卡片
+    top5.forEach(([k, v], idx) => {
+        const t = tacticsDB[k];
+        const isBest = idx === 0;
+        const medal = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'][idx];
+        const hasDemo = ['horns', 'pickroll', 'triangle', 'fastbreak', 'hornsflare', 'isolation', 'backdoor', 'spreadpnr'].includes(k);
+
         html += `
-            <div class="score-item">
-                <div class="score-label">${tacticsDB[k].name}</div>
-                <div class="score-bar"><div class="score-fill" style="width: ${Math.min(v, 100)}%"></div></div>
-                <div class="score-val">${Math.round(v)}%</div>
+            <div style="margin-bottom:14px;padding:14px;border-radius:12px;background:${isBest ? 'rgba(245,166,35,0.08)' : 'rgba(255,255,255,0.03)'};border:1px solid ${isBest ? 'rgba(245,166,35,0.25)' : 'rgba(255,255,255,0.06)'};">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:18px;">${medal}</span>
+                        <span style="font-size:15px;font-weight:700;color:${isBest ? 'var(--gold)' : 'var(--text-primary)'};">${t.emoji} ${t.name}</span>
+                        <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(85,37,131,0.2);color:#b08ed6;">${t.cat}</span>
+                    </div>
+                    <span style="font-size:16px;font-weight:800;color:${isBest ? 'var(--gold)' : 'var(--text-secondary)'};">${Math.round(v)}%</span>
+                </div>
+                <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:6px;">${t.desc}</p>
+                <p style="font-size:11px;color:${isBest ? 'var(--gold)' : '#8bc34a'};margin-bottom:8px;">${reasons[k]}</p>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">
+                    ${t.steps.map((s, i) => `<span style="font-size:10px;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,0.05);color:var(--text-secondary);">${i+1}. ${s}</span>`).join('')}
+                </div>
+                <button class="result-action-btn ${isBest ? 'primary' : ''}" style="font-size:11px;padding:6px 14px;" onclick="applyTactic('${k}')">${hasDemo ? '查看战术演示' : '查看类似演示'}</button>
             </div>
         `;
     });
-    html += '</div>';
-
-    // 其他推荐
-    if (top3[1]) {
-        const second = tacticsDB[top3[1][0]];
-        html += `<p style="font-size:12px;color:var(--text-secondary);margin-top:12px;">💡 备选：${second.name}(${Math.round(top3[1][1])}%) — ${reasons[top3[1][0]]}</p>`;
-    }
-    if (top3[2]) {
-        const third = tacticsDB[top3[2][0]];
-        html += `<p style="font-size:12px;color:var(--text-secondary);">💡 备选：${third.name}(${Math.round(top3[2][1])}%) — ${reasons[top3[2][0]]}</p>`;
-    }
-
-    // 战术步骤
-    html += `
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);">
-            <div style="font-size:13px;font-weight:700;margin-bottom:8px;">📋 执行步骤：</div>
-            ${best.steps.map((s, i) => `<div style="display:flex;align-items:center;font-size:12px;color:var(--text-secondary);margin-bottom:6px;"><span style="width:20px;height:20px;background:var(--gold);color:var(--dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-right:8px;flex-shrink:0;">${i+1}</span>${s}</div>`).join('')}
-        </div>
-        <div class="result-action">
-            <button class="result-action-btn primary" onclick="applyTactic('${bestKey}')">查看战术演示</button>
-            <button class="result-action-btn" onclick="closeTacticsModal()">关闭</button>
-        </div>
-    `;
 
     result.innerHTML = html;
     result.classList.add('active');
@@ -3118,9 +3207,45 @@ function renderTacticsResult(top3, scores, reasons, aiAnalysis) {
 function applyTactic(tactic) {
     closeTacticsModal();
     document.getElementById('tactics').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // 有动画的战术直接切换，没有的找同类动画
+    const demoTactics = ['horns', 'pickroll', 'triangle', 'fastbreak', 'hornsflare', 'isolation', 'backdoor', 'spreadpnr'];
+    let target = tactic;
+    if (!demoTactics.includes(tactic)) {
+        const cat = tacticsDB[tactic].cat;
+        const name = tacticsDB[tactic].name;
+        // 根据战术特征匹配最相似的演示
+        if (name.includes('牛角')) target = 'hornsflare';
+        else if (name.includes('挡拆') || name.includes('手递手') || name.includes('Spain')) target = 'spreadpnr';
+        else if (name.includes('三角') || name.includes('高低') || name.includes('内外') || name.includes('背身')) target = 'triangle';
+        else if (cat === '转换进攻' || name.includes('快') || name.includes('反跑')) target = 'fastbreak';
+        else if (name.includes('单打') || name.includes('错位')) target = 'isolation';
+        else if (name.includes('反跑') || name.includes('空切')) target = 'backdoor';
+        else target = 'horns';
+    }
+
     setTimeout(() => {
-        const tab = document.querySelector(`.tactics-tab-d[onclick*="${tactic}"]`);
-        if (tab) switchTacticDesktop(tactic, tab);
+        const tab = document.querySelector(`.tactics-tab-d[onclick*="${target}"]`);
+        if (tab) switchTacticDesktop(target, tab);
+        // 在战术信息区显示推荐战术的补充说明
+        if (tactic !== target) {
+            setTimeout(() => {
+                const info = document.querySelector('.tactics-info-d');
+                if (info) {
+                    const t = tacticsDB[tactic];
+                    const note = document.createElement('div');
+                    note.style.cssText = 'margin-top:16px;padding:14px;border-radius:12px;background:rgba(85,37,131,0.1);border:1px solid rgba(85,37,131,0.25);';
+                    note.innerHTML = `
+                        <div style="color:var(--gold);font-weight:700;font-size:13px;margin-bottom:6px;">📌 您推荐的「${t.name}」战术说明</div>
+                        <p style="font-size:12px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px;">${t.desc}</p>
+                        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">执行步骤：</div>
+                        ${t.steps.map((s, i) => `<div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">${i+1}. ${s}</div>`).join('')}
+                        <div style="font-size:11px;color:#8bc34a;margin-top:6px;">💡 上方为同类基础动画演示，实际执行请参考此说明</div>
+                    `;
+                    info.appendChild(note);
+                }
+            }, 100);
+        }
     }, 600);
 }
 
