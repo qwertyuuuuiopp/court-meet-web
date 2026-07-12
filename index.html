@@ -2079,9 +2079,9 @@
      const panel = document.getElementById('apiKeyPanel');
      panel.classList.toggle('active');
      if (panel.classList.contains('active')) {
-         const input = document.getElementById('apiKeyInput');
-         input.value = getApiKey();
-         input.focus();
+         // 打开面板时输入框留空，不暴露任何Key
+         document.getElementById('apiKeyInput').value = '';
+         document.getElementById('apiKeyInput').focus();
      }
  }
 
